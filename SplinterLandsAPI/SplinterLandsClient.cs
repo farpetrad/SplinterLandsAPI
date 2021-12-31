@@ -27,9 +27,9 @@ namespace SplinterLandsAPI
 
                     var set = new CardSet()
                     {
-                        SetCollection = JArray.Parse(response.Content).ToObject<List<Card>>()
+                        Cards = JArray.Parse(response.Content).ToObject<List<Card>>()
                     };
-                    var summoners = set.SetCollection.Where(c => c.Type == "Summoner").ToList();
+                    var summoners = set.Cards.Where(c => c.Type == "Summoner").ToList();
                     return set;
                 }
                 return new CardSet();

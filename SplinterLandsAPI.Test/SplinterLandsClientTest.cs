@@ -12,8 +12,8 @@ namespace SplinterLandsAPI.Test
             var cardSet = client.GetCards();
 
             Assert.IsNotNull(cardSet);
-            Assert.IsNotNull(cardSet.SetCollection);
-            Assert.IsTrue(cardSet.SetCollection.Count > 0);
+            Assert.IsNotNull(cardSet.Cards);
+            Assert.IsTrue(cardSet.Cards.Count > 0);
         }
     }
 }

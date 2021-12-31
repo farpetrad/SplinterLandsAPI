@@ -5,6 +5,6 @@ namespace SplinterLandsAPI.Models
     public class PlayerBattles
     {
         public string Player { get; set; }
-        public JArray Battles { get; set; } = new JArray();
+        public List<Battle> Battles { get; set; } = new List<Battle>();
     }
 }

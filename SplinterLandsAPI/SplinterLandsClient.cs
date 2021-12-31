@@ -26,7 +26,6 @@ namespace SplinterLandsAPI
                     {
                         Cards = JArray.Parse(response.Content).ToObject<List<Card>>()
                     };
-                    var summoners = set.Cards.Where(c => c.Type == "Summoner").ToList();
                     return set;
                 }
                 return new CardSet();

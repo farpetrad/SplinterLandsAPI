@@ -1,9 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace SplinterLandsAPI.Models
 {
@@ -25,7 +21,13 @@ namespace SplinterLandsAPI.Models
         public int Current_Streak { get; set; } = -1;
         public string Ruleset { get; set; } = string.Empty;
         public string Inactive { get; set; } = string.Empty;
-        public JValue? Settings { get; set; } = null;
+        public string Settings
+        {
+            get => BattleSettings == null ? "" : BattleSettings.ToString();
+            set => BattleSettings = value != null ? (JsonConvert.DeserializeObject<BattleSettings>(value)) ?? new BattleSettings() 
+                : new BattleSettings();
+        }
+        public BattleSettings BattleSettings { get; set; } = new BattleSettings();
         public Int64 Block_Num { get; set; } = -1;
         public Int64 Rshares { get; set; } = -1;
         public JValue? Dec_Info { get; set; } = null;

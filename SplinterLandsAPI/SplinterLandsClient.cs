@@ -47,6 +47,16 @@ namespace SplinterLandsAPI
                     response.Content.Length > 0)
                 {
                     var battles = JsonConvert.DeserializeObject<PlayerBattles>(response.Content) ?? new PlayerBattles() { Player = playerName };
+
+                    Parallel.ForEach(battles.Battles, 
+                        new ParallelOptions() { MaxDegreeOfParallelism = Environment.ProcessorCount }, 
+                        battle => {
+                            battle.BattleDetails.Team1.Summoner.TheCard = GetCardDetails(battle.BattleDetails.Team1.Summoner.Uid);
+                            battle.BattleDetails.Team1.Monsters.ForEach(monster => monster.TheCard = GetCardDetails(monster.Uid));
+
+                            battle.BattleDetails.Team2.Summoner.TheCard = GetCardDetails(battle.BattleDetails.Team2.Summoner.Uid);
+                            battle.BattleDetails.Team2.Monsters.ForEach(monster => monster.TheCard = GetCardDetails(monster.Uid));
+                        });
                     return battles;
                 }
                 return new PlayerBattles() { Player = playerName };
@@ -55,6 +65,27 @@ namespace SplinterLandsAPI
             {
                 _logger.LogError(ex, "An error occured while calling GetBattlesForPlayer");
                 return new PlayerBattles() { Player = playerName };
+            }
+        }
+
+        public Card GetCardDetails(string Uid)
+        {
+            if(string.IsNullOrEmpty(Uid)) throw new ArgumentException("Uid must be provided", nameof(Uid));
+            try
+            {
+                var response = GetClientResponse($"cards/find?ids={Uid}");
+                if (response != null && response.StatusCode == System.Net.HttpStatusCode.OK &&
+                    response.Content.Length > 0)
+                {
+                    var details = JsonConvert.DeserializeObject<List<CardDetails>>(response.Content) ?? new List<CardDetails>();
+                    return details.First().Details;
+                }
+                return new Card();
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, "An error occured while calling GetCardDetails");
+                return new Card();
             }
         }
 

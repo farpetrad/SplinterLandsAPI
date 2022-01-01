@@ -9,7 +9,7 @@ namespace SplinterLandsAPI.Models
         public string? Initiator { get; set; } = null;
         public string Target { get; set; } = string.Empty;
         public int? Damage { get; set; } = null;
-        public JObject? State { get; set; } = null;
+        public BattleActionState? State { get; set; } = null;
         public string? Hit_Chance { get; set; } = null;
         public double? Hit_Value { get; set; } = null;
     }

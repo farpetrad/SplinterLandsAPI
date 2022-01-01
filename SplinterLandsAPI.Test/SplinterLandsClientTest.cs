@@ -6,14 +6,25 @@ namespace SplinterLandsAPI.Test
     public class SplinterLandsClientTest
     {
         [TestMethod]
-        public void TestMethod1()
+        public void TestGetCards()
         {
             var client = new SplinterLandsClient(null);
             var cardSet = client.GetCards();
 
             Assert.IsNotNull(cardSet);
-            Assert.IsNotNull(cardSet.SetCollection);
-            Assert.IsTrue(cardSet.SetCollection.Count > 0);
+            Assert.IsNotNull(cardSet.Cards);
+            Assert.IsTrue(cardSet.Cards.Count > 0);
+        }
+
+        [TestMethod]
+        public void TestGetPlayerBattles()
+        {
+            var client = new SplinterLandsClient(null);
+            var battles = client.GetBattlesForPlayer("farpetrad");
+
+            Assert.IsNotNull(battles);
+            Assert.IsNotNull(battles.Battles);
+            Assert.IsTrue(battles.Battles.Count > 0);
         }
     }
 }

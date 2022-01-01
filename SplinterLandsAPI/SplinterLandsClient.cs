@@ -24,7 +24,7 @@ namespace SplinterLandsAPI
 
                     var set = new CardSet()
                     {
-                        Cards = JArray.Parse(response.Content).ToObject<List<Card>>()
+                        Cards = JArray.Parse(response.Content).ToObject<List<Card>>() ?? new List<Card>()
                     };
                     return set;
                 }
@@ -46,7 +46,7 @@ namespace SplinterLandsAPI
                 if (response != null && response.StatusCode == System.Net.HttpStatusCode.OK &&
                     response.Content.Length > 0)
                 {
-                    var battles = JsonConvert.DeserializeObject<PlayerBattles>(response.Content);
+                    var battles = JsonConvert.DeserializeObject<PlayerBattles>(response.Content) ?? new PlayerBattles() { Player = playerName };
                     return battles;
                 }
                 return new PlayerBattles() { Player = playerName };

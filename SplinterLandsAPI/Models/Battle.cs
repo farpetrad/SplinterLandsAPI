@@ -14,7 +14,14 @@ namespace SplinterLandsAPI.Models
         public int Player_2_rating_initial { get; set; } = -1;
         public int Player_1_rating_final { get; set; } = -1;
         public int Player_2_rating_final { get; set; } = -1;
-        public JValue? Details { get; set; } = null;
+
+        public BattleDetails BattleDetails { get; set; } = new BattleDetails();
+        public string Details
+        {
+            get => BattleDetails == null ? "" : BattleDetails.ToString();
+            set => BattleDetails = value != null ? (JsonConvert.DeserializeObject<BattleDetails>(value)) ?? new BattleDetails()
+                : new BattleDetails();
+        }
         public DateTime? Created_Date { get; set; } = null;
         public string Match_Type { get;set; } = string.Empty;
         public int Mana_Cap { get; set; } = -1;

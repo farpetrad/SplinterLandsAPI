@@ -7,7 +7,7 @@
         public string Color { get; set; } = String.Empty;
         public string Type { get; set; } = String.Empty;
         public CardRarity Rarity { get; set; } = CardRarity.Unknown;
-        public int Total_printed { get; set; } = -1;
+        public Int64 Total_printed { get; set; } = -1;
         public bool Is_Promo { get; set; } = false;
         public bool Is_Starter { get; set; } = false;
 

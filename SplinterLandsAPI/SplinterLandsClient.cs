@@ -48,15 +48,6 @@ namespace SplinterLandsAPI
                 {
                     var battles = JsonConvert.DeserializeObject<PlayerBattles>(response.Content) ?? new PlayerBattles() { Player = playerName };
 
-                    Parallel.ForEach(battles.Battles, 
-                        new ParallelOptions() { MaxDegreeOfParallelism = Environment.ProcessorCount }, 
-                        battle => {
-                            battle.BattleDetails.Team1.Summoner.TheCard = GetCardDetails(battle.BattleDetails.Team1.Summoner.Uid);
-                            battle.BattleDetails.Team1.Monsters.ForEach(monster => monster.TheCard = GetCardDetails(monster.Uid));
-
-                            battle.BattleDetails.Team2.Summoner.TheCard = GetCardDetails(battle.BattleDetails.Team2.Summoner.Uid);
-                            battle.BattleDetails.Team2.Monsters.ForEach(monster => monster.TheCard = GetCardDetails(monster.Uid));
-                        });
                     return battles;
                 }
                 return new PlayerBattles() { Player = playerName };

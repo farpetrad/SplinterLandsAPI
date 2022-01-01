@@ -12,6 +12,8 @@ namespace SplinterLandsAPI.Models
         public int Edition { get; set; } = -1;
         public string? Skin { get; set; } = null;
         public JObject State { get; set; } = new JObject();
+        public Card? TheCard { get; set; } = null;
+        public JArray? Abilities { get; set; } = null;
         
     }
 }

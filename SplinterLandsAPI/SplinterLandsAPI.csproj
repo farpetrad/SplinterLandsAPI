@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -13,6 +13,14 @@
     <NeutralLanguage>en</NeutralLanguage>
     <PackageId>$(AssemblyName)</PackageId>
     <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
+    <Company>$(Authors)</Company>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <Version>1.0.0-beta.1</Version>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <Version>1.0.0.1</Version>
   </PropertyGroup>
 
   <ItemGroup>

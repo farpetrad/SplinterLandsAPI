@@ -94,11 +94,11 @@ namespace SplinterLandsAPI.Models
             if (value.GetType() == typeof(JArray))
             {
                 JArray? tmp = value as JArray;
-                parsed = tmp != null ? tmp.ToObject<List<int>>() : new Object();
+                parsed = tmp != null ? tmp.ToObject<List<string>>() : new Object();
             }
-            else if (value.GetType() == typeof(Int64))
+            else
             {
-                parsed = Convert.ToInt32(value);
+                parsed = value.ToString();
             }
             return parsed != null ? parsed : new Object();
         }
@@ -120,13 +120,13 @@ namespace SplinterLandsAPI.Models
                         parsed = tmp.Children().Select(child =>
                         {
                             var array = child.Children().Select(subChild => subChild == null ? "" : subChild.ToString()).ToList();
-                            return array;
+                            return String.Join(",",array);
                         }).ToList();
                     }
                     
                 }
             }
-            return parsed;
+            return parsed; 
         }
     }
 }

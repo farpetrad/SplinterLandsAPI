@@ -1,4 +1,4 @@
-﻿namespace SplinterLandsAPI.Models
+﻿namespace SplinterLands.DTOs.Models
 {
     public enum CardRarity
     {

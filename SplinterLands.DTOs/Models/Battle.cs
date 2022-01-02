@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace SplinterLandsAPI.Models
+namespace SplinterLands.DTOs.Models
 {
     public class Battle
     {

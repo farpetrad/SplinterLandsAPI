@@ -1,7 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
-using System.Linq;
 
-namespace SplinterLandsAPI.Models
+namespace SplinterLands.DTOs.Models
 {
     public class CardStats
     {

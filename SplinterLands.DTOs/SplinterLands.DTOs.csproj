@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -6,14 +6,11 @@
     <Nullable>enable</Nullable>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Authors>Farpetrad</Authors>
+    <Description>Data transfer objects
+</Description>
     <Copyright>2022</Copyright>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/farpetrad/SplinterLandsAPI</RepositoryUrl>
-    <PackageTags>Splinterlands;API;</PackageTags>
-    <NeutralLanguage>en</NeutralLanguage>
-    <PackageId>$(AssemblyName)</PackageId>
-    <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
-    <Company>$(Authors)</Company>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -22,7 +19,6 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Version>1.0.0.2</Version>
   </PropertyGroup>
-
   <ItemGroup>
     <None Include="..\README.md">
       <Pack>True</Pack>
@@ -31,13 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="RestSharp" Version="106.15.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\SplinterLands.DTOs\SplinterLands.DTOs.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,4 +1,4 @@
-﻿using SplinterLandsAPI.Models;
+﻿using SplinterLands.DTOs.Models;
 
 namespace SplinterLandsAPI
 {

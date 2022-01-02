@@ -1,8 +1,7 @@
 # SplinterLandsAPI
 
 This is just a demonstration of using the Splinterlands API through .NET 6.0 C#.  
-
-
+These API's are not documented and are subject to change at any time
 
 # Known Issues
-- Since we fill out all the cards from player battles with card details there is a API rate limiting issue when making multiple calls for player battle history.
+- If you hit any of these API's in quick sucession you will get rate limited'

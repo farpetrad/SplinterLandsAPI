@@ -38,7 +38,18 @@ namespace SplinterLandsAPI.Test
             var cardDetails = client.GetCardDetails("C-B3HJQSQCPC");
 
             Assert.IsNotNull(cardDetails);
-            Assert.IsTrue(cardDetails.Id > 0);
+            Assert.IsTrue(cardDetails.Details.Id > 0);
+        }
+
+        [TestMethod]
+        public void TestGetPlayersQuest()
+        {
+            var client = new SplinterLandsClient(Log);
+            var quest = client.GetPlayersCurrentQuest("farpetrad");
+
+            Assert.IsNotNull(quest);
+            Assert.IsTrue(!string.IsNullOrEmpty(quest.Id));
+            Assert.IsTrue(!string.IsNullOrEmpty(quest.Name));
         }
     }
 }

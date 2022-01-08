@@ -59,7 +59,7 @@ namespace SplinterLandsAPI
             }
         }
 
-        public Card GetCardDetails(string Uid)
+        public CardDetails GetCardDetails(string Uid)
         {
             if(string.IsNullOrEmpty(Uid)) throw new ArgumentException("Uid must be provided", nameof(Uid));
             try
@@ -69,20 +69,51 @@ namespace SplinterLandsAPI
                     response.Content.Length > 0)
                 {
                     var details = JsonConvert.DeserializeObject<List<CardDetails>>(response.Content) ?? new List<CardDetails>();
-                    return details.First().Details;
+                    return details.First();
                 }
-                return new Card();
+                return new CardDetails();
             }
             catch(Exception ex)
             {
                 _logger.LogError(ex, "An error occured while calling GetCardDetails");
-                return new Card();
+                return new CardDetails();
             }
         }
 
-        private IRestResponse? GetClientResponse(string endPoint)
+        public PlayerQuest GetPlayersCurrentQuest(string playerName)
         {
-            var client = new RestClient("https://api.splinterlands.io");
+            if (string.IsNullOrEmpty(playerName)) throw new ArgumentException("Player name must be provided", nameof(playerName));
+            try
+            {
+                var response = GetClientResponse($"players/quests?username={playerName}", false);
+                if(response != null && response.StatusCode == System.Net.HttpStatusCode.OK &&
+                    response.Content.Length > 0)
+                {
+                    var quest = JsonConvert.DeserializeObject<List<PlayerQuest>>(response.Content) ?? new List<PlayerQuest>() { new PlayerQuest() { Player = playerName } };
+                    return quest.First();
+                }
+                return new PlayerQuest() { Player = playerName };
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, "An error occured while calling GetPlayersCurrentQuest");
+                return new PlayerQuest() {  Player = playerName };
+            }
+
+        }
+
+        private IRestResponse? GetClientResponse(string endPoint, bool api1 = true)
+        {
+            string api = string.Empty;
+            if (api1)
+            {
+                api = "https://api.splinterlands.io";
+            }
+            else
+            {
+                api = "https://api2.splinterlands.com";
+            }
+            var client = new RestClient(api);
             client.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36";
 
             var request = new RestRequest(endPoint, Method.GET, DataFormat.Json);

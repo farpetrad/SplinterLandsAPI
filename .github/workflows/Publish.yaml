@@ -32,7 +32,7 @@ jobs:
         run: dotnet build --no-restore
 
       - name: Pack it up
-        run: dotnet pack -c Release -o out
+        run: dotnet pack -c Release
 
       - name: Push generated package to Nuget
-        run: dotnet nuget push ./out/*.nupkg --skip-duplicate --no-symbols true
+        run: dotnet nuget push ./**/*.nupkg --skip-duplicate --no-symbols true

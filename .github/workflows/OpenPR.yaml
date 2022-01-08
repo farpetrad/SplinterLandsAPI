@@ -1,14 +1,16 @@
-name: BumpVersion
+name: OpenPR
 
 on:
-    pull_request:
-      branches: 
-       - master
-      types: [closed]
+  push:
+    branches-ignore:
+        - master  
+  pull_request:
+     branches-ignore:
+        - master  
+     types: [opened]
 
 jobs:
-    BumpVersion:
-        if: ${{ github.event.pull_request.merged }}
+    update-version:
         runs-on: ubuntu-latest
 
         steps:
@@ -40,5 +42,5 @@ jobs:
               run: |
                 git config --global user.name 'farpetrad'
                 git config --global user.email 'farpetrad@gmail.com'
-                git commit -am "Version bumped [skip actions]"
+                git commit -am "Version bumped"
                 git push

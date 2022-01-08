@@ -27,10 +27,10 @@ jobs:
           
       - name: Restore dependencies
         run: dotnet restore
-
-      - name: Pack it up
+      - name: Move to Project
         run: cd SplinterLandsAPI
-             dotnet pack -c Release
+      - name: Pack it up
+        run: dotnet pack -c Release
 
       - name: Push generated package to Nuget
         run: dotnet nuget push ./**/*.nupkg --skip-duplicate --no-symbols true

@@ -2,7 +2,8 @@ name: Build
 
 on:
   workflow_run:
-    workflows: ["OpenPR"]
+    workflows: 
+     - OpenPR
     types: 
       - completed
 

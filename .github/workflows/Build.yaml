@@ -1,9 +1,6 @@
 name: .NET
 
 on:
-  push:
-    branches-ignore:
-        - master
   pull_request:
      branches-ignore:
         - master  
@@ -33,3 +30,10 @@ jobs:
       with:
         version_files: "**/*.csproj"
         github_token: ${{ secrets.GH_TOKEN }}
+
+    - name: Commit version changes
+      run: |
+        git config --global user.name 'farpetrad'
+        git config --global user.email 'farpetrad@gmail.com'
+        git commit -am "Version bumped"
+        git push

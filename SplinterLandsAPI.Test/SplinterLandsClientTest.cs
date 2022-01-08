@@ -40,5 +40,16 @@ namespace SplinterLandsAPI.Test
             Assert.IsNotNull(cardDetails);
             Assert.IsTrue(cardDetails.Details.Id > 0);
         }
+
+        [TestMethod]
+        public void TestGetPlayersQuest()
+        {
+            var client = new SplinterLandsClient(Log);
+            var quest = client.GetPlayersCurrentQuest("farpetrad");
+
+            Assert.IsNotNull(quest);
+            Assert.IsTrue(!string.IsNullOrEmpty(quest.Id));
+            Assert.IsTrue(!string.IsNullOrEmpty(quest.Name));
+        }
     }
 }

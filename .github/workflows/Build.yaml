@@ -1,13 +1,10 @@
 name: Build
 
 on:
-  push:
-    branches-ignore:
-        - master  
-  pull_request:
-     branches-ignore:
-        - master  
-     types: [opened]
+  workflow_run:
+    workflows: ["OpenPR"]
+    types: 
+      - completed
 
 jobs:
   Build:

@@ -1,13 +1,16 @@
-name: BumpVersion
+name: OpenPR
 
 on:
-    pull_request:
-      branches: 
-       - master
-      types: [closed]
+  push:
+    branches-ignore:
+        - master  
+  pull_request:
+     branches-ignore:
+        - master  
+     types: [opened]
 
 jobs:
-    BumpVersion:
+    OpenPR:
         if: ${{ github.event.pull_request.merged }}
         runs-on: ubuntu-latest
 

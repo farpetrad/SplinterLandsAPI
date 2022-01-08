@@ -35,4 +35,4 @@ jobs:
         run: dotnet pack -c Release -o Out
 
       - name: Push generated package to Nuget
-        run: dotnet nuget push **/*.nupkg --skip-duplicate --no-symbols true
+        run: dotnet nuget push **/*.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.PUBLISH_TO_NUGET_ORG }} --skip-duplicate

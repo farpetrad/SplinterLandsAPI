@@ -1,9 +1,6 @@
 name: NuGet Generation
 
 on:
-  push:
-    branches:
-      - master
   pull_request:
     types: [closed]
     branches:
@@ -31,11 +28,11 @@ jobs:
       - name: Publish SplinterLandsAPI
         uses: brandedoutcast/publish-nuget@v2.5.2
         with:
-          PROJECT_FILE_PATH: SplinterLandsAPI/SplinterLandsAPI/SplinterLandsAPI.csproj
+          PROJECT_FILE_PATH: SplinterLandsAPI/SplinterLandsAPI/SplinterLandsAPI/SplinterLandsAPI.csproj
           NUGET_KEY: ${{secrets.NUGET}}
 
       - name: Publish SplinterLands.DTOs
         uses: brandedoutcast/publish-nuget@v2.5.2
         with:
-          PROJECT_FILE_PATH: SplinterLandsAPI/SplinterLands.DTOs/SplinterLands.DTOs.csproj
+          PROJECT_FILE_PATH: SplinterLandsAPI/SplinterLandsAPI/SplinterLands.DTOs/SplinterLands.DTOs.csproj
           NUGET_KEY: ${{secrets.NUGET}}

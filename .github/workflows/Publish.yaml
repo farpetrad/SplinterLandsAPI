@@ -12,27 +12,30 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    name: Update NuGet package
+
     steps:
-
       - name: Checkout repository
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
 
-      - name: Setup .NET Core @ Latest
+      - name: Setup .NET Core 6
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 6.0.x
-        env:
-          NUGET_AUTH_TOKEN: ${{secrets.NUGET}}        
           
       - name: Restore dependencies
         run: dotnet restore
-      - name: Build it
-        run: dotnet build -c Release -o Out
-      - name: Move to Project
-        run: cd SplinterLandsAPI
-      - name: Pack it up
-        run: dotnet pack -c Release -o Out
 
-      - name: Push generated package to Nuget
-        run: nuget push **/*.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET }} --skip-duplicate
+      - name: Build it
+        run: dotnet build -c Release --no-restore
+
+      - name: Publish SplinterLandsAPI
+        uses: brandedoutcast/publish-nuget@v2.5.2
+        with:
+          PROJECT_FILE_PATH: SplinterLandsAPI/SplinterLandsAPI/SplinterLandsAPI.csproj
+          NUGET_KEY: ${{secrets.NUGET}}
+
+      - name: Publish SplinterLands.DTOs
+        uses: brandedoutcast/publish-nuget@v2.5.2
+        with:
+          PROJECT_FILE_PATH: SplinterLandsAPI/SplinterLands.DTOs/SplinterLands.DTOs.csproj
+          NUGET_KEY: ${{secrets.NUGET}}

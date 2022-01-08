@@ -39,5 +39,5 @@ jobs:
       run: |
         git config --global user.name 'farpetrad'
         git config --global user.email 'farpetrad@gmail.com'
-        git commit -am "Version bumped"
+        git commit -am "Version bumped [skip actions]"
         git push

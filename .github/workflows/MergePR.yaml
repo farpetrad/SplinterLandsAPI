@@ -1,17 +1,20 @@
-name: Bump version after PR
+name: BumpVersion
 
 on:
     pull_request:
-        branches: 
-         - master
-        types: [closed]
+      branches: 
+       - master
+      types: [closed]
 
 jobs:
-    handleMerge:
+    BumpVersion:
         if: ${{ github.event.pull_request.merged }}
         runs-on: ubuntu-latest
 
         steps:
+            - name: Checkout repository
+              uses: actions/checkout@v2
+
             - name: Bump versions
               uses: SiqiLu/dotnet-bump-version@master
               with:

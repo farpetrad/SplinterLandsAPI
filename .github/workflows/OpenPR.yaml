@@ -10,7 +10,7 @@ on:
      types: [opened]
 
 jobs:
-    OpenPR:
+    update-version:
         runs-on: ubuntu-latest
 
         steps:
@@ -42,5 +42,5 @@ jobs:
               run: |
                 git config --global user.name 'farpetrad'
                 git config --global user.email 'farpetrad@gmail.com'
-                git commit -am "Version bumped [skip actions]"
+                git commit -am "Version bumped"
                 git push

@@ -14,13 +14,14 @@
     <PackageId>$(AssemblyName)</PackageId>
     <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
     <Company>$(Authors)</Company>
+    <PackageLicenseFile>License.txt</PackageLicenseFile>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <Version>1.0.0-beta.2</Version>
+    <Version>1.0.0-beta.3</Version>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <Version>1.0.0.2</Version>
+    <Version>1.0.0.3</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -28,6 +29,7 @@
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
+    <None Include="License.txt" Pack="true" PackagePath=""/>
   </ItemGroup>
 
   <ItemGroup>

@@ -38,7 +38,7 @@ namespace SplinterLandsAPI.Test
             var cardDetails = client.GetCardDetails("C-B3HJQSQCPC");
 
             Assert.IsNotNull(cardDetails);
-            Assert.IsTrue(cardDetails.Id > 0);
+            Assert.IsTrue(cardDetails.Details.Id > 0);
         }
     }
 }

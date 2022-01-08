@@ -59,7 +59,7 @@ namespace SplinterLandsAPI
             }
         }
 
-        public Card GetCardDetails(string Uid)
+        public CardDetails GetCardDetails(string Uid)
         {
             if(string.IsNullOrEmpty(Uid)) throw new ArgumentException("Uid must be provided", nameof(Uid));
             try
@@ -69,14 +69,14 @@ namespace SplinterLandsAPI
                     response.Content.Length > 0)
                 {
                     var details = JsonConvert.DeserializeObject<List<CardDetails>>(response.Content) ?? new List<CardDetails>();
-                    return details.First().Details;
+                    return details.First();
                 }
-                return new Card();
+                return new CardDetails();
             }
             catch(Exception ex)
             {
                 _logger.LogError(ex, "An error occured while calling GetCardDetails");
-                return new Card();
+                return new CardDetails();
             }
         }
 

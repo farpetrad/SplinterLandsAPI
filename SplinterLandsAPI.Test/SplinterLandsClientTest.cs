@@ -51,5 +51,15 @@ namespace SplinterLandsAPI.Test
             Assert.IsTrue(!string.IsNullOrEmpty(quest.Id));
             Assert.IsTrue(!string.IsNullOrEmpty(quest.Name));
         }
+
+        [TestMethod]
+        public void TestPlayerReferrals()
+        {
+            var client = new SplinterLandsClient(Log);
+            var referral = client.GetReferralsForPlayer("z3ll");
+
+            Assert.IsNotNull(referral);
+            Assert.IsTrue(referral.Referrals.Count > 0);
+        }
     }
 }

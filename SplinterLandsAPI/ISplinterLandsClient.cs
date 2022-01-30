@@ -2,11 +2,8 @@
 
 namespace SplinterLandsAPI
 {
-    internal interface ISplinterLandsClient
+    internal interface ISplinterLandsClient : IBattlesClient, ICardsClient, IPlayerClient
     {
-        CardSet GetCards();
-        CardDetails GetCardDetails(string Uid);
-        PlayerBattles GetBattlesForPlayer(string playerName);
-        PlayerQuest GetPlayersCurrentQuest(string playerName);
+        
     }
 }

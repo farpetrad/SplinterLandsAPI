@@ -28,7 +28,7 @@ namespace SplinterLandsAPI
                     };
                     return set;
                 }
-                return new CardSet();
+                throw new Exception($"Invalid response {response?.StatusCode}");
             }
             catch (Exception ex)
             {
@@ -50,7 +50,7 @@ namespace SplinterLandsAPI
 
                     return battles;
                 }
-                return new PlayerBattles() { Player = playerName };
+                throw new Exception($"Invalid response {response?.StatusCode}");
             }
             catch(Exception ex)
             {
@@ -71,7 +71,7 @@ namespace SplinterLandsAPI
                     var details = JsonConvert.DeserializeObject<List<CardDetails>>(response.Content) ?? new List<CardDetails>();
                     return details.First();
                 }
-                return new CardDetails();
+                throw new Exception($"Invalid response {response?.StatusCode}");
             }
             catch(Exception ex)
             {
@@ -92,7 +92,7 @@ namespace SplinterLandsAPI
                     var quest = JsonConvert.DeserializeObject<List<PlayerQuest>>(response.Content) ?? new List<PlayerQuest>() { new PlayerQuest() { Player = playerName } };
                     return quest.First();
                 }
-                return new PlayerQuest() { Player = playerName };
+                throw new Exception($"Invalid response {response?.StatusCode}");
             }
             catch(Exception ex)
             {
@@ -100,6 +100,29 @@ namespace SplinterLandsAPI
                 return new PlayerQuest() {  Player = playerName };
             }
 
+        }
+
+        public ReferralCollection GetReferralsForPlayer(string playerName)
+        {
+            if (string.IsNullOrEmpty(playerName)) throw new ArgumentException("Player name must be provided", nameof(playerName));
+            try
+            {
+                var response = GetClientResponse($"/players/referrals?username={playerName}");
+                if (response != null && response.StatusCode == System.Net.HttpStatusCode.OK &&
+                    response.Content.Length > 0)
+                {
+                    return JsonConvert.DeserializeObject<ReferralCollection>(response.Content) ?? new ReferralCollection();
+
+                }
+                throw new Exception($"Invalid response {response?.StatusCode}");
+                
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, "An error occured while calling GetReferralsForPlayer");
+                return new ReferralCollection();
+            }
+            
         }
 
         private IRestResponse? GetClientResponse(string endPoint, bool api1 = true)

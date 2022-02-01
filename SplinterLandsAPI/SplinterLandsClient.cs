@@ -42,7 +42,7 @@ namespace SplinterLandsAPI
             if(string.IsNullOrEmpty(playerName))   throw new ArgumentException("playerName must be provided", nameof(playerName));
             try
             {
-                var response = GetClientResponse($"battle/history?player={playerName}");
+                var response = GetClientResponse($"battle/history?player={playerName}", false);
                 if (response != null && response.StatusCode == System.Net.HttpStatusCode.OK &&
                     response.Content.Length > 0)
                 {

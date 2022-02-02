@@ -1,10 +1,9 @@
-name: Nuget
+name: Publish release to nuget
 
 on:
-    pull_request:
+    push:
       branches: 
        - master
-      types: [closed]
 
 jobs:
   Nuget:
@@ -14,30 +13,26 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+        with:
+          fetch-depth: '0'
 
       - name: Setup .NET Core 6
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 6.0.x
 
-      - name: Bump versions
-        uses: SiqiLu/dotnet-bump-version@master
-        with:
-            version_files: "**/*.csproj"
-            github_token: ${{ secrets.GH_TOKEN }}
-
-      - name: Commit version changes
-        run: |
-          git config --global user.name 'farpetrad'
-          git config --global user.email 'farpetrad@gmail.com'
-          git commit -am "Version bumped"
-          git push -f
+      - name: Bump version and push tag
+        id: bump-and-tag
+        uses: anothrNick/github-tag-action@1.36.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.CI_TOKEN }}
+          WITH_V: true
       
       - name: Restore dependencies
         run: dotnet restore
 
       - name: Build it
-        run: dotnet build -c Release --no-restore
+        run: dotnet build -c Release --no-restore -p:Version=${{ steps.bump-and-tag.outputs.new_tag }}
 
       - name: Publish SplinterLandsAPI
         uses: brandedoutcast/publish-nuget@v2.5.2

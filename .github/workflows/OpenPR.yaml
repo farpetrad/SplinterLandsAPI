@@ -26,9 +26,29 @@ jobs:
             - name: Restore dependencies
               run: dotnet restore
 
+            - name: Bump version and push tag
+              id: bump-and-tag
+              uses: anothrNick/github-tag-action@1.36.0
+              env:
+                GITHUB_TOKEN: ${{ secrets.CI_TOKEN }}
+                WITH_V: true
+                DRY_RUN: true
+
             - name: Build
               run: dotnet build --no-restore
 
             - name: Test
               run: dotnet test --no-build --verbosity normal
 
+            - name: Bump versions
+              uses: SiqiLu/dotnet-bump-version@master
+              with:
+                  version_files: "**/*.csproj"
+                  github_token: ${{ secrets.GH_TOKEN }}
+              
+            - name: Commit version changes
+              run: |
+                git config --global user.name 'farpetrad'
+                git config --global user.email 'farpetrad@gmail.com'
+                git commit -am "Version bumped"
+                git push -f

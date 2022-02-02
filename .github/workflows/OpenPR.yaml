@@ -35,7 +35,7 @@ jobs:
                 WITH_V: true
                 DRY_RUN: true 
             - name: output
-              run:  
+              run:  |
                     RAW=${{ steps.bump-and-tag.outputs.new_tag }}
                     CONVERTED=$(echo $RAW | sed 's/\v//')
                     echo "Value=$CONVERTED" >> $GITHUB_ENV

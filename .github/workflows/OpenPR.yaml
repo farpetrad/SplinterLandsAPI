@@ -37,7 +37,7 @@ jobs:
             - name: output
               run:  RAW=${{ steps.bump-and-tag.outputs.new_tag }}
                     CONVERTED=$(echo $RAW | sed 's/\v//')
-                    echo $CONVERTED
+                    echo "Value=$CONVERTED" >> $CONVERTED
 
             - name: Build
               run: dotnet build --no-restore

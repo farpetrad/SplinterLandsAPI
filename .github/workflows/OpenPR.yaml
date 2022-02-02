@@ -1,13 +1,7 @@
 name: OpenPR
 
-on:
-  push:
-    branches-ignore:
-        - master  
+on: 
   pull_request:
-     branches-ignore:
-        - master  
-     types: [opened]
 
 jobs:
     update-version:
@@ -26,9 +20,22 @@ jobs:
             - name: Restore dependencies
               run: dotnet restore
 
+            - name: Bump version and push tag
+              id: bump-and-tag
+              uses: anothrNick/github-tag-action@1.36.0
+              env:
+                DEFAULT_BUMP: patch
+                GITHUB_TOKEN: ${{ secrets.CI_TOKEN }}
+                WITH_V: true
+                
+            - name: output
+              id: vars
+              run: echo ${{ steps.bump-and-tag.outputs.new_tag  }}
+
             - name: Build
               run: dotnet build --no-restore
 
             - name: Test
               run: dotnet test --no-build --verbosity normal
 
+           

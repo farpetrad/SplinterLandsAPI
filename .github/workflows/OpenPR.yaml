@@ -34,12 +34,11 @@ jobs:
                 GITHUB_TOKEN: ${{ secrets.CI_TOKEN }}
                 WITH_V: true
                 DRY_RUN: true 
+            - name: manipulate
+              run: ::set-output name=version::${steps.bump-and-tag.outputs.new_tag#*\v}
             - name: output
-              run:
-                  RAW_TOXENV="${{ steps.bump-and-tag.outputs.new_tag }}"
-                  TOXENV=$(echo $RAW_TOXENV | sed 's/\.//')
-                  echo "TOXENV=$TOXENV" >> $GITHUB_ENV
-
+              id: vars
+              run: echo "the value = ${{ {steps.vars.version }} "
             - name: Build
               run: dotnet build --no-restore
 

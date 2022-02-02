@@ -33,6 +33,8 @@ jobs:
                 GITHUB_TOKEN: ${{ secrets.CI_TOKEN }}
                 WITH_V: true
                 DRY_RUN: true 
+            - name: output
+              run: echo "The tag is ${{ steps.bump-and-tag.outputs.new_tag }}"
 
             - name: Build
               run: dotnet build --no-restore

@@ -33,7 +33,6 @@ jobs:
                 DEFAULT_BUMP: patch
                 GITHUB_TOKEN: ${{ secrets.CI_TOKEN }}
                 WITH_V: true
-                DRY_RUN: true 
 
             - name: Set Versions
               uses: actions/github-script@v4
@@ -51,6 +50,7 @@ jobs:
             - name: output
               id: vars
               run: echo ${{ steps.set_version.outputs.no_v }}
+
             - name: Build
               run: dotnet build --no-restore
 

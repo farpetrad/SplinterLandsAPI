@@ -35,7 +35,7 @@ jobs:
                 WITH_V: true
                 DRY_RUN: true 
             - name: output
-              run: echo "The tag is tag ${{ steps.bump-and-tag.outputs.new_tag }} value ${{ steps.bump-and-tag.outputs.tag }} part ${{ steps.bump-and-tag.outputs.part }}"
+              run: echo "The tag is tag ${{ steps.bump-and-tag.outputs.new_tag | sed 's/\v//' }} value ${{ steps.bump-and-tag.outputs.tag }} part ${{ steps.bump-and-tag.outputs.part }}"
 
             - name: Build
               run: dotnet build --no-restore

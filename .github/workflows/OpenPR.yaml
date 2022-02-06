@@ -33,7 +33,6 @@ jobs:
                 DATA: ${{ steps.bump-and-tag.outputs.new_tag }}
               with:
                 script: |
-                  console.log(context)
                   const id = process.env.DATA.split('v')[1]
                   core.setOutput('id', id)
                 

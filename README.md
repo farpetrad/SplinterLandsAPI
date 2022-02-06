@@ -1,3 +1,5 @@
+[![Nuget Release](https://github.com/farpetrad/SplinterLandsAPI/actions/workflows/Publish.yaml/badge.svg?event=push)](https://github.com/farpetrad/SplinterLandsAPI/actions/workflows/Publish.yaml)
+
 # SplinterLandsAPI
 
 This is just a demonstration of using the Splinterlands API through .NET 6.0 C#.  

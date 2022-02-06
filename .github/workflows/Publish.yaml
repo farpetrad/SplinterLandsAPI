@@ -60,6 +60,6 @@ jobs:
 
 
       - name: Publish SplinterLandsDTOs
-        run: nuget push ./**/*.nupkg -SkipDuplicate -NoSymbols
+        run: nuget push ./**/*.nupkg -SkipDuplicate -NoSymbols -Source https://api.nuget.org/v3/index.json
        
  

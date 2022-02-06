@@ -60,9 +60,6 @@ jobs:
 
 
       - name: Publish SplinterLandsDTOs
-        run: dotnet nuget push /home/runner/work/SplinterLandsAPI/SplinterLandsAPI/out/SplinterLands.DTOs.*.nupkg --skip-duplicate --no-symbols true
-        
-      - name: Publish SplinterLandsDTOs
-        run: dotnet nuget push /home/runner/work/SplinterLandsAPI/SplinterLandsAPI/out/SplinterLandsAPI.*.nupkg --skip-duplicate --no-symbols true
+        run: dotnet nuget push /home/runner/work/SplinterLandsAPI/SplinterLandsAPI/out/*.nupkg --skip-duplicate --no-symbols true
        
  

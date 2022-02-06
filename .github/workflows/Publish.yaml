@@ -59,6 +59,9 @@ jobs:
         run: dotnet pack -c Release --no-restore -p:Version=${{ steps.get-id.outputs.version }}
 
 
+      - name: Publish SplinterLandsDTOs
+        run: dotnet nuget push /home/runner/work/SplinterLandsAPI/SplinterLandsAPI/SplinterLands.DTOs/bin/Release/*.nupkg --skip-duplicate --no-symbols true
+
       - name: Publish SplinterLandsAPI
-        run: dotnet nuget push **/*.nupkg --skip-duplicate --no-symbols true
+        run: dotnet nuget push /home/runner/work/SplinterLandsAPI/SplinterLandsAPI/SplinterLandsAPI/bin/Release/*.nupkg --skip-duplicate --no-symbols true
  

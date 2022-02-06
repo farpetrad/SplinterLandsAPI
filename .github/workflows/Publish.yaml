@@ -63,9 +63,14 @@ jobs:
         with:
           PROJECT_FILE_PATH: SplinterLandsAPI/SplinterLandsAPI.csproj
           NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+          VERSION_STATIC: ${{ steps.get-id.outputs.version }}
+          TAG_COMMIT: false
+
 
       - name: Publish SplinterLands.DTOs
         uses: brandedoutcast/publish-nuget@v2.5.2
         with:
           PROJECT_FILE_PATH: SplinterLands.DTOs/SplinterLands.DTOs.csproj
           NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+          VERSION_STATIC: ${{ steps.get-id.outputs.version }}
+          TAG_COMMIT: false

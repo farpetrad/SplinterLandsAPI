@@ -34,11 +34,11 @@ jobs:
               with:
                 script: |
                   const id = process.env.DATA.split('v')[1]
-                  core.setOutput('id', id)
+                  core.setOutput('version', id)
                 
             - name: output
               id: tag-and-version
-              run: echo "Output tag = ${{ steps.bump-and-tag.outputs.new_tag }} parsed = ${{ steps.get-id.outputs.id }}"
+              run: echo "Output tag = ${{ steps.bump-and-tag.outputs.new_tag }} parsed = ${{ steps.get-id.outputs.version }}"
 
             - name: Build
               run: dotnet build --no-restore

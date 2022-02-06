@@ -1,7 +1,7 @@
 name: OpenPR
 
 on: 
-  pull_request:
+  pull_request
 
 jobs:
     update-version:

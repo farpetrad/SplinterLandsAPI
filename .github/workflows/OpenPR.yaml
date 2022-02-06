@@ -41,7 +41,7 @@ jobs:
               run: echo "Output tag = ${{ steps.bump-and-tag.outputs.new_tag }} parsed = ${{ steps.get-id.outputs.version }}"
 
             - name: Build
-              run: dotnet build --no-restore
+              run: dotnet build --no-restore -c Release -p:Version=${{ steps.get-id.outputs.version }}
 
             - name: Test
               run: dotnet test --no-build --verbosity normal

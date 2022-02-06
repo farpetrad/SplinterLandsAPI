@@ -29,10 +29,12 @@ jobs:
             - name: version it
               id: get-id
               uses: actions/github-script@0.9.0
+              env:
+                DATA: ${{ steps.bump-and-tag.outputs.new_tag }}
               with:
                 script: |
                   console.log(context)
-                  const id = context.steps.bump-and-tag.outputs.new_tag.split('v')[1]
+                  const id = process.env.DATA.split('v')[1]
                   core.setOutput('id', id)
                 
             - name: output

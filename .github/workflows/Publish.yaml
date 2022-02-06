@@ -39,12 +39,6 @@ jobs:
             const id = process.env.DATA.split('v')[1]
             core.setOutput('version', id)
 
-      - name: Bump versions
-        uses: SiqiLu/dotnet-bump-version@master
-        with:
-          version_files: "**/*.csproj"
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Create releasse
         id: release
         uses: actions/create-release@v1
@@ -61,19 +55,14 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore
 
-      - name: Build it
-        run: dotnet build -c Release --no-restore
+      - name: Pack it
+        run: dotnet pack -c Release --no-restore -p:Version=${{ steps.get-id.outputs.version }} -o out
 
-      - name: Publish SplinterLandsAPI
-        uses: brandedoutcast/publish-nuget@v2.5.2
-        with:
-          PROJECT_FILE_PATH: SplinterLandsAPI/SplinterLandsAPI.csproj
-          NUGET_KEY: ${{secrets.NUGET_API_KEY}}
 
-      - name: Publish SplinterLands.DTOs
-        uses: brandedoutcast/publish-nuget@v2.5.2
-        with:
-          PROJECT_FILE_PATH: SplinterLands.DTOs/SplinterLands.DTOs.csproj
-          NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+      - name: Publish SplinterLandsDTOs
+        run: dotnet nuget push ./<project>/<project>/out/*.nupkg --skip-duplicate --no-symbols true
+        
+      - name: Publish SplinterLandsDTOs
+        run: dotnet nuget push ./<project>/<project>/out/*.nupkg --skip-duplicate --no-symbols true
        
  

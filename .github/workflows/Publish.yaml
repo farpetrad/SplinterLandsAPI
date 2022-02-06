@@ -19,6 +19,9 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 6.0.x
+          source-url: https://nuget.pkg.github.com/farpetrad/index.json
+        env:
+          NUGET_AUTH_TOKEN: ${{ secrets.NUGET_API_KEY }}  
 
       - name: Bump version and push tag
         id: bump-and-tag
@@ -47,30 +50,16 @@ jobs:
           release_name: Release ${{ steps.bump-and-tag.outputs.new_tag }}
           body: |
             Changes in this release
-              - First Change
-              - Second Change
           draft: false
           prerelease: false
       
       - name: Restore dependencies
         run: dotnet restore
 
-      - name: Build it
-        run: dotnet build -c Release --no-restore -p:Version=${{ steps.get-id.outputs.version }}
+      - name: Pack it
+        run: dotnet pack -c Release --no-restore -p:Version=${{ steps.get-id.outputs.version }}
+
 
       - name: Publish SplinterLandsAPI
-        uses: brandedoutcast/publish-nuget@v2.5.2
-        with:
-          PROJECT_FILE_PATH: SplinterLandsAPI/SplinterLandsAPI.csproj
-          NUGET_KEY: ${{secrets.NUGET_API_KEY}}
-          VERSION_STATIC: ${{ steps.get-id.outputs.version }}
-          TAG_COMMIT: false
-
-
-      - name: Publish SplinterLands.DTOs
-        uses: brandedoutcast/publish-nuget@v2.5.2
-        with:
-          PROJECT_FILE_PATH: SplinterLands.DTOs/SplinterLands.DTOs.csproj
-          NUGET_KEY: ${{secrets.NUGET_API_KEY}}
-          VERSION_STATIC: ${{ steps.get-id.outputs.version }}
-          TAG_COMMIT: false
+        run: dotnet nuget push ./<project>/out/*.nupkg --skip-duplicate --no-symbols true
+ 

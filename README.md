@@ -16,9 +16,10 @@ These API's are not documented and are subject to change at any time
 
 * GetBattlesForPlayer - returns the last 50 battles a player has participated in
 
-## Quests
+## Player
 
 * GetPlayersCurrentQuest - returns details about the current quest for a player
+* GetReferralsForPlayer - returns an object with a list of referrals and a list of purchases made by the referrals
 
 
 # Known Issues

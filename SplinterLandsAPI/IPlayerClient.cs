@@ -1,4 +1,5 @@
-﻿using SplinterLands.DTOs.Models;
+﻿using SplinterLands.DTOs.Enums;
+using SplinterLands.DTOs.Models;
 
 namespace SplinterLandsAPI
 {
@@ -6,5 +7,6 @@ namespace SplinterLandsAPI
     {
         PlayerQuest GetPlayersCurrentQuest(string playerName);
         ReferralCollection GetReferralsForPlayer(string playerName);
+        EditionPackPurchases GetPackPurchaesForPlayerByEdition(string playerName, SetEditionEnum edition);
     }
 }

@@ -1,6 +1,6 @@
-﻿namespace SplinterLands.DTOs.Models
+﻿namespace SplinterLands.DTOs.Enums
 {
-    public enum CardRarity
+    public enum CardRarityEnum
     {
         Unknown = -1,
         Common = 1,

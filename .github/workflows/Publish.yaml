@@ -1,0 +1,65 @@
+name: Publish release to nuget
+
+on:
+    push:
+      branches: 
+       - master
+
+jobs:
+  Nuget:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: '0'
+
+      - name: Setup .NET Core 6
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 6.0.x
+
+      - name: Bump version and push tag
+        id: bump-and-tag
+        uses: anothrNick/github-tag-action@1.36.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
+          WITH_V: true
+
+      - name: output
+        id: tag-and-version
+        run: echo "Output tag = "${{ steps.bump-and-tag.outputs.new_tag  }}, version = ${{ GITHUB_REF:11 }}
+
+      - name: Create releasse
+        id: release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          body: |
+            Changes in this release
+              - First Change
+              - Second Change
+          draft: false
+          prerelease: false
+      
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build it
+        run: dotnet build -c Release --no-restore -p:Version=${{ GITHUB_REF:11 }}
+
+      - name: Publish SplinterLandsAPI
+        uses: brandedoutcast/publish-nuget@v2.5.2
+        with:
+          PROJECT_FILE_PATH: SplinterLandsAPI/SplinterLandsAPI.csproj
+          NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+
+      - name: Publish SplinterLands.DTOs
+        uses: brandedoutcast/publish-nuget@v2.5.2
+        with:
+          PROJECT_FILE_PATH: SplinterLands.DTOs/SplinterLands.DTOs.csproj
+          NUGET_KEY: ${{secrets.NUGET_API_KEY}}

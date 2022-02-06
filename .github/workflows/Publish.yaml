@@ -27,10 +27,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
           WITH_V: true
 
-      - name: output
-        id: tag-and-version
-        run: echo "Output tag = "${{ steps.bump-and-tag.outputs.new_tag  }}, version = ${{ GITHUB_REF:11 }}
-
       - name: version it
         id: get-id
         uses: actions/github-script@0.9.0

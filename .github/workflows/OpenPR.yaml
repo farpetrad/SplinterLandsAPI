@@ -35,7 +35,7 @@ jobs:
                 
             - name: output
               id: tag-and-version
-              run: echo "Output tag = ${{ steps.bump-and-tag.outputs.new_tag:11  }} parsed = ${{ steps.get-id.outputs.id }}"
+              run: echo "Output tag = ${{ steps.bump-and-tag.outputs.new_tag }} parsed = ${{ steps.get-id.outputs.id }}"
 
             - name: Build
               run: dotnet build --no-restore

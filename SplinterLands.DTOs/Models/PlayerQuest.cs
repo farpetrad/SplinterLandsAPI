@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using SplinterLands.DTOs.Enums;
 
 namespace SplinterLands.DTOs.Models
 {

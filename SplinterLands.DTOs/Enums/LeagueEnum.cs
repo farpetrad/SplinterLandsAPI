@@ -1,4 +1,4 @@
-﻿namespace SplinterLands.DTOs.Models
+﻿namespace SplinterLands.DTOs.Enums
 {
     public enum LeagueEnum
     {

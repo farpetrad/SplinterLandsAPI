@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RestSharp;
+using SplinterLands.DTOs.Enums;
 using SplinterLands.DTOs.Models;
 
 namespace SplinterLandsAPI
@@ -100,6 +101,28 @@ namespace SplinterLandsAPI
                 return new PlayerQuest() {  Player = playerName };
             }
 
+        }
+
+        public EditionPackPurchases GetPackPurchaesForPlayerByEdition(string playerName, SetEditionEnum edition)
+        {
+            if (string.IsNullOrEmpty(playerName)) throw new ArgumentException("Player name must be provided", nameof(playerName));
+            if (edition == SetEditionEnum.Invalid) throw new ArgumentException("A valid edition must be specified", nameof(edition));
+            try
+            {
+                var response = GetClientResponse($"players/pack_purchases?edition={Convert.ToInt32(edition)}&username={playerName}", false);
+                if (response != null && response.StatusCode == System.Net.HttpStatusCode.OK &&
+                    response.Content.Length > 0)
+                {
+                    return JsonConvert.DeserializeObject<EditionPackPurchases>(response.Content) ?? new EditionPackPurchases() { Player = playerName };
+
+                }
+                throw new Exception($"Invalid response {response?.StatusCode}");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occured while calling GetPackPurchaesForPlayerByEdition");
+                return new EditionPackPurchases() { Player = playerName };
+            }
         }
 
         public ReferralCollection GetReferralsForPlayer(string playerName)

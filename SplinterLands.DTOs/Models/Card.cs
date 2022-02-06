@@ -1,4 +1,6 @@
-﻿namespace SplinterLands.DTOs.Models
+﻿using SplinterLands.DTOs.Enums;
+
+namespace SplinterLands.DTOs.Models
 {
     public class Card
     {
@@ -6,7 +8,7 @@
         public string Name { get; set; } = String.Empty;
         public string Color { get; set; } = String.Empty;
         public string Type { get; set; } = String.Empty;
-        public CardRarity Rarity { get; set; } = CardRarity.Unknown;
+        public CardRarityEnum Rarity { get; set; } = CardRarityEnum.Unknown;
         public Int64 Total_printed { get; set; } = -1;
         public bool Is_Promo { get; set; } = false;
         public bool Is_Starter { get; set; } = false;
@@ -18,19 +20,19 @@
 
         private int MaxLevelForRarity()
         {
-            if (Rarity == CardRarity.Common)
+            if (Rarity == CardRarityEnum.Common)
             {
                 return 10;
             }
-            else if (Rarity == CardRarity.Rare)
+            else if (Rarity == CardRarityEnum.Rare)
             {
                 return 8;
             }
-            else if (Rarity == CardRarity.Epic)
+            else if (Rarity == CardRarityEnum.Epic)
             {
                 return 6;
             }
-            else if (Rarity == CardRarity.Legendary)
+            else if (Rarity == CardRarityEnum.Legendary)
             {
                 return 4;
             }

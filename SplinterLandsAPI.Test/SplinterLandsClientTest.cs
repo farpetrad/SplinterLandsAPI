@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using SplinterLands.DTOs.Enums;
 
 namespace SplinterLandsAPI.Test
 {
@@ -60,6 +61,16 @@ namespace SplinterLandsAPI.Test
 
             Assert.IsNotNull(referral);
             Assert.IsTrue(referral.Referrals.Count > 0);
+        }
+
+        [TestMethod]
+        public void TestPlayerPackPurchases()
+        {
+            var client = new SplinterLandsClient(Log);
+            var purchases = client.GetPackPurchaesForPlayerByEdition("z3ll", SetEditionEnum.ChaosLegion);
+
+            Assert.IsNotNull(purchases);
+            Assert.IsTrue(purchases.Packs > 0);
         }
     }
 }

@@ -25,10 +25,17 @@ jobs:
               env:
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
                 WITH_V: true
+
+            - id: get-id
+              uses: actions/github-script@0.9.0
+              with:
+                script: |
+                  const id = steps.bump-and-tag.outputs.new_tag.split('v')[1]
+                  core.setOutput('id', id)
                 
             - name: output
               id: tag-and-version
-              run: echo "Output tag = ${{ steps.bump-and-tag.outputs.new_tag:11  }}"
+              run: echo "Output tag = ${{ steps.bump-and-tag.outputs.new_tag:11  }} parsed = ${{ steps.get-id.outputs.id }}"
 
             - name: Build
               run: dotnet build --no-restore

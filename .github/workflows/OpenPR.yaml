@@ -28,7 +28,7 @@ jobs:
                 
             - name: output
               id: tag-and-version
-              run: echo "Output tag = ${{ steps.bump-and-tag.outputs.new_tag  }}, version = ${{ github.ref }}"
+              run: echo "Output tag = ${{ steps.bump-and-tag.outputs.new_tag:11  }}"
 
             - name: Build
               run: dotnet build --no-restore

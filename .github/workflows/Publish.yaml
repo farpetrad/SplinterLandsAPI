@@ -60,5 +60,5 @@ jobs:
 
 
       - name: Publish SplinterLandsAPI
-        run: dotnet nuget push ./<project>/out/*.nupkg --skip-duplicate --no-symbols true
+        run: dotnet nuget push **/*.nupkg --skip-duplicate --no-symbols true
  

@@ -72,5 +72,25 @@ namespace SplinterLandsAPI.Test
             Assert.IsNotNull(purchases);
             Assert.IsTrue(purchases.Packs > 0);
         }
+
+        [TestMethod]
+        public void TestPlayerActiveRentals()
+        {
+            var client = new SplinterLandsClient(Log);
+            var rentals = client.GetActiveRentalsForPlayer("farpetrad");
+
+            Assert.IsNotNull(rentals);
+            Assert.IsTrue(rentals.Count > 0);
+        }
+
+        [TestMethod]
+        public void TestPlayerCurrentRentals()
+        {
+            var client = new SplinterLandsClient(Log);
+            var rentals = client.GetActivelyRentaledCardsForPlayer("buddy06");
+
+            Assert.IsNotNull(rentals);
+            Assert.IsTrue(rentals.Count >= 0);
+        }
     }
 }

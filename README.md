@@ -20,6 +20,8 @@ These API's are not documented and are subject to change at any time
 
 * GetPlayersCurrentQuest - returns details about the current quest for a player
 * GetReferralsForPlayer - returns an object with a list of referrals and a list of purchases made by the referrals
+* GetPackPurchaesForPlayerByEdition - returns an object describing the purchases made for packs by edition
+* GetActiveRentalsForPlayer - returns a list of active rentals for a player
 
 
 # Known Issues

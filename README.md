@@ -1,4 +1,5 @@
 [![Nuget Release](https://github.com/farpetrad/SplinterLandsAPI/actions/workflows/Publish.yaml/badge.svg?event=push)](https://github.com/farpetrad/SplinterLandsAPI/actions/workflows/Publish.yaml)
+[![CodeQL](https://github.com/farpetrad/SplinterLandsAPI/actions/workflows/CodeQL.yaml/badge.svg?branch=master)](https://github.com/farpetrad/SplinterLandsAPI/actions/workflows/CodeQL.yaml)
 
 # SplinterLandsAPI
 
@@ -22,7 +23,7 @@ These API's are not documented and are subject to change at any time
 * GetReferralsForPlayer - returns an object with a list of referrals and a list of purchases made by the referrals
 * GetPackPurchaesForPlayerByEdition - returns an object describing the purchases made for packs by edition
 * GetActiveRentalsForPlayer - returns a list of active rentals for a player
-
+* GetActivelyRentaledCardsForPlayer - returns a list of actively rented cards for a player
 
 # Known Issues
 - If you hit any of these API's in quick sucession you will get rate limited'

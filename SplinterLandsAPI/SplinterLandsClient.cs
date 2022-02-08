@@ -85,6 +85,28 @@ namespace SplinterLandsAPI
             }
         }
 
+        public async Task<PlayerBattles> GetBattlesForPlayerAsync(string playerName)
+        {
+            if (string.IsNullOrEmpty(playerName)) throw new ArgumentException("playerName must be provided", nameof(playerName));
+            try
+            {
+                var response = await GetClientResponseAsync($"battle/history?player={playerName}", false);
+                if (response != null && response.StatusCode == System.Net.HttpStatusCode.OK &&
+                    response.Content.Length > 0)
+                {
+                    var battles = JsonConvert.DeserializeObject<PlayerBattles>(response.Content) ?? new PlayerBattles() { Player = playerName };
+
+                    return battles;
+                }
+                throw new Exception($"GetBattlesForPlayerAsync - Invalid response {response?.StatusCode}");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occured while calling GetBattlesForPlayerAsync");
+                return new PlayerBattles() { Player = playerName };
+            }
+        }
+
         public CardDetails GetCardDetails(string Uid)
         {
             if(string.IsNullOrEmpty(Uid)) throw new ArgumentException("Uid must be provided", nameof(Uid));

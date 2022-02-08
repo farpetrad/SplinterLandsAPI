@@ -40,6 +40,15 @@ namespace SplinterLandsAPI.Test
             Assert.IsNotNull(battles);
             Assert.IsNotNull(battles.Battles);
             Assert.IsTrue(battles.Battles.Count > 0);
+
+            battles = null;
+            var task = client.GetBattlesForPlayerAsync("farpetrad");
+            Task.WaitAll(task);
+            battles = task.Result;
+
+            Assert.IsNotNull(battles);
+            Assert.IsNotNull(battles.Battles);
+            Assert.IsTrue(battles.Battles.Count > 0);
         }
 
         [TestMethod]

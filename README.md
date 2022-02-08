@@ -5,7 +5,11 @@
 # SplinterLandsAPI
 
 This is just a demonstration of using the Splinterlands API through .NET 6.0 C#.  
-These API's are not documented and are subject to change at any time
+These API's are not documented and are subject to change at any time.
+
+# Client
+
+The client is defined as implementing the ISplinterLandsClient interface which is a collection of interfaces seperated by 'Api'.  Each interface supports both async and non async methods.
 
 # Supported APIs
 

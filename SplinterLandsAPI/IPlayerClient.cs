@@ -6,9 +6,14 @@ namespace SplinterLandsAPI
     public interface IPlayerClient
     {
         PlayerQuest GetPlayersCurrentQuest(string playerName);
+        Task<PlayerQuest> GetPlayerCurrentQuestAsync(string playerName);
         ReferralCollection GetReferralsForPlayer(string playerName);
+        Task<ReferralCollection> GetReferralsForPlayerAsync(string playerName);
         EditionPackPurchases GetPackPurchaesForPlayerByEdition(string playerName, SetEditionEnum edition);
+        Task<EditionPackPurchases> GetPackPurchaesForPlayerByEditionAsync(string playerName, SetEditionEnum edition);
         List<RentalCard> GetActiveRentalsForPlayer(string playerName);
+        Task<List<RentalCard>> GetActiveRentalsForPlayerAsync(string playerName);
         List<RentalCard> GetActivelyRentaledCardsForPlayer(string playerName);
+        Task<List<RentalCard>> GetActivelyRentaledCardsForPlayerAsync(string playerName);
     }
 }

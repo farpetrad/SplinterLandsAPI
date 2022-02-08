@@ -1,4 +1,5 @@
 [![Nuget Release](https://github.com/farpetrad/SplinterLandsAPI/actions/workflows/Publish.yaml/badge.svg?event=push)](https://github.com/farpetrad/SplinterLandsAPI/actions/workflows/Publish.yaml)
+<br />
 [![CodeQL](https://github.com/farpetrad/SplinterLandsAPI/actions/workflows/CodeQL.yaml/badge.svg?branch=master)](https://github.com/farpetrad/SplinterLandsAPI/actions/workflows/CodeQL.yaml)
 
 # SplinterLandsAPI

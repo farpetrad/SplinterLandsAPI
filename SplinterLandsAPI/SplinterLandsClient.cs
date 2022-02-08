@@ -10,6 +10,7 @@ namespace SplinterLandsAPI
     public class SplinterLandsClient : ISplinterLandsClient
     {
         private readonly ILogger _logger;
+        private readonly string UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36";
         public SplinterLandsClient(ILogger logger)
         {
             _logger = logger;
@@ -18,7 +19,7 @@ namespace SplinterLandsAPI
         {
             try
             {
-                var response = GetClientResponse("cards/get_details").Result;
+                var response = GetClientResponse("cards/get_details");
                 if (response != null && response.StatusCode == System.Net.HttpStatusCode.OK &&
                     response.Content.Length > 0)
                 {
@@ -43,7 +44,7 @@ namespace SplinterLandsAPI
             if(string.IsNullOrEmpty(playerName))   throw new ArgumentException("playerName must be provided", nameof(playerName));
             try
             {
-                var response = GetClientResponse($"battle/history?player={playerName}", false).Result;
+                var response = GetClientResponse($"battle/history?player={playerName}", false);
                 if (response != null && response.StatusCode == System.Net.HttpStatusCode.OK &&
                     response.Content.Length > 0)
                 {
@@ -65,7 +66,7 @@ namespace SplinterLandsAPI
             if(string.IsNullOrEmpty(Uid)) throw new ArgumentException("Uid must be provided", nameof(Uid));
             try
             {
-                var response = GetClientResponse($"cards/find?ids={Uid}").Result;
+                var response = GetClientResponse($"cards/find?ids={Uid}");
                 if (response != null && response.StatusCode == System.Net.HttpStatusCode.OK &&
                     response.Content.Length > 0)
                 {
@@ -86,7 +87,7 @@ namespace SplinterLandsAPI
             if (string.IsNullOrEmpty(playerName)) throw new ArgumentException("Player name must be provided", nameof(playerName));
             try
             {
-                var response = GetClientResponse($"players/quests?username={playerName}", false).Result;
+                var response = GetClientResponse($"players/quests?username={playerName}", false);
                 if(response != null && response.StatusCode == System.Net.HttpStatusCode.OK &&
                     response.Content.Length > 0)
                 {
@@ -102,6 +103,26 @@ namespace SplinterLandsAPI
             }
 
         }
+        public async Task<PlayerQuest> GetPlayerCurrentQuestAsync(string playerName)
+        {
+            if (string.IsNullOrEmpty(playerName)) throw new ArgumentException("Player name must be provided", nameof(playerName));
+            try
+            {
+                var response = await GetClientResponseAsync($"players/quests?username={playerName}", false);
+                if (response != null && response.StatusCode == System.Net.HttpStatusCode.OK &&
+                    response.Content.Length > 0)
+                {
+                    var quest = JsonConvert.DeserializeObject<List<PlayerQuest>>(response.Content) ?? new List<PlayerQuest>() { new PlayerQuest() { Player = playerName } };
+                    return quest.First();
+                }
+                throw new Exception($"GetPlayerCurrentQuestAsync - Invalid response {response?.StatusCode}");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occured while calling GetPlayerCurrentQuestAsync");
+                return new PlayerQuest() { Player = playerName };
+            }
+        }
 
         public EditionPackPurchases GetPackPurchaesForPlayerByEdition(string playerName, SetEditionEnum edition)
         {
@@ -109,7 +130,7 @@ namespace SplinterLandsAPI
             if (edition == SetEditionEnum.Invalid) throw new ArgumentException("A valid edition must be specified", nameof(edition));
             try
             {
-                var response = GetClientResponse($"players/pack_purchases?edition={Convert.ToInt32(edition)}&username={playerName}", false).Result;
+                var response = GetClientResponse($"players/pack_purchases?edition={Convert.ToInt32(edition)}&username={playerName}", false);
                 if (response != null && response.StatusCode == System.Net.HttpStatusCode.OK &&
                     response.Content.Length > 0)
                 {
@@ -125,12 +146,55 @@ namespace SplinterLandsAPI
             }
         }
 
+        public async Task<EditionPackPurchases> GetPackPurchaesForPlayerByEditionAsync(string playerName, SetEditionEnum edition)
+        {
+            if (string.IsNullOrEmpty(playerName)) throw new ArgumentException("Player name must be provided", nameof(playerName));
+            if (edition == SetEditionEnum.Invalid) throw new ArgumentException("A valid edition must be specified", nameof(edition));
+            try
+            {
+                var response = await GetClientResponseAsync($"players/pack_purchases?edition={Convert.ToInt32(edition)}&username={playerName}", false);
+                if (response != null && response.StatusCode == System.Net.HttpStatusCode.OK &&
+                    response.Content.Length > 0)
+                {
+                    return JsonConvert.DeserializeObject<EditionPackPurchases>(response.Content) ?? new EditionPackPurchases() { Player = playerName };
+
+                }
+                throw new Exception($"GetPackPurchaesForPlayerByEditionAsync - Invalid response {response?.StatusCode}");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occured while calling GetPackPurchaesForPlayerByEditionAsync");
+                return new EditionPackPurchases() { Player = playerName };
+            }
+        }
+
         public List<RentalCard> GetActiveRentalsForPlayer(string playerName)
         {
             if (string.IsNullOrEmpty(playerName)) throw new ArgumentException("Player name must be provided", nameof(playerName));
             try
             {
-                var response = GetClientResponse($"market/active_rentals?owner={playerName}", false).Result;
+                var response = GetClientResponse($"market/active_rentals?owner={playerName}", false);
+                if (response != null && response.StatusCode == System.Net.HttpStatusCode.OK &&
+                    response.Content.Length > 0)
+                {
+                    return JsonConvert.DeserializeObject<List<RentalCard>>(response.Content) ?? new List<RentalCard>();
+
+                }
+                throw new Exception($"GetActiveRentalsForPlayer - Invalid response {response?.StatusCode}");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occured while calling GetActiveRentalsForPlayer");
+                return new List<RentalCard>();
+            }
+        }
+
+        public async Task<List<RentalCard>> GetActiveRentalsForPlayerAsync(string playerName)
+        {
+            if (string.IsNullOrEmpty(playerName)) throw new ArgumentException("Player name must be provided", nameof(playerName));
+            try
+            {
+                var response = await GetClientResponseAsync($"market/active_rentals?owner={playerName}", false);
                 if (response != null && response.StatusCode == System.Net.HttpStatusCode.OK &&
                     response.Content.Length > 0)
                 {
@@ -151,7 +215,28 @@ namespace SplinterLandsAPI
             if (string.IsNullOrEmpty(playerName)) throw new ArgumentException("Player name must be provided", nameof(playerName));
             try
             {
-                var response = GetClientResponse($"market/active_rentals?renter={playerName}", false).Result;
+                var response = GetClientResponse($"market/active_rentals?renter={playerName}", false);
+                if (response != null && response.StatusCode == System.Net.HttpStatusCode.OK &&
+                    response.Content.Length > 0)
+                {
+                    return JsonConvert.DeserializeObject<List<RentalCard>>(response.Content) ?? new List<RentalCard>();
+
+                }
+                throw new Exception($"GetActivelyRentaledCardsForPlayer - Invalid response {response?.StatusCode}");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occured while calling GetActivelyRentaledCardsForPlayer");
+                return new List<RentalCard>();
+            }
+        }
+
+        public async Task<List<RentalCard>> GetActivelyRentaledCardsForPlayerAsync(string playerName)
+        {
+            if (string.IsNullOrEmpty(playerName)) throw new ArgumentException("Player name must be provided", nameof(playerName));
+            try
+            {
+                var response = await GetClientResponseAsync($"market/active_rentals?renter={playerName}", false);
                 if (response != null && response.StatusCode == System.Net.HttpStatusCode.OK &&
                     response.Content.Length > 0)
                 {
@@ -172,7 +257,7 @@ namespace SplinterLandsAPI
             if (string.IsNullOrEmpty(playerName)) throw new ArgumentException("Player name must be provided", nameof(playerName));
             try
             {
-                var response = GetClientResponse($"/players/referrals?username={playerName}").Result;
+                var response = GetClientResponse($"/players/referrals?username={playerName}");
                 if (response != null && response.StatusCode == System.Net.HttpStatusCode.OK &&
                     response.Content.Length > 0)
                 {
@@ -190,7 +275,29 @@ namespace SplinterLandsAPI
             
         }
 
-        private async Task<IRestResponse>? GetClientResponse(string endPoint, bool api1 = true)
+        public async Task<ReferralCollection> GetReferralsForPlayerAsync(string playerName)
+        {
+            if (string.IsNullOrEmpty(playerName)) throw new ArgumentException("Player name must be provided", nameof(playerName));
+            try
+            {
+                var response = await GetClientResponseAsync($"/players/referrals?username={playerName}");
+                if (response != null && response.StatusCode == System.Net.HttpStatusCode.OK &&
+                    response.Content.Length > 0)
+                {
+                    return JsonConvert.DeserializeObject<ReferralCollection>(response.Content) ?? new ReferralCollection();
+
+                }
+                throw new Exception($"GetReferralsForPlayerAsync - Invalid response {response?.StatusCode}");
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occured while calling GetReferralsForPlayerAsync");
+                return new ReferralCollection();
+            }
+        }
+
+        private IRestResponse GetClientResponse(string endPoint, bool api1 = true)
         {
             string api = string.Empty;
             if (api1)
@@ -202,7 +309,25 @@ namespace SplinterLandsAPI
                 api = "https://api2.splinterlands.com";
             }
             var client = new RestClient(api);
-            client.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36";
+            client.UserAgent = UserAgent;
+
+            var request = new RestRequest(endPoint, Method.GET, DataFormat.Json);
+            return client.Get(request);
+        }
+
+        private async Task<IRestResponse> GetClientResponseAsync(string endPoint, bool api1 = true)
+        {
+            string api = string.Empty;
+            if (api1)
+            {
+                api = "https://api.splinterlands.io";
+            }
+            else
+            {
+                api = "https://api2.splinterlands.com";
+            }
+            var client = new RestClient(api);
+            client.UserAgent = UserAgent;
 
             var request = new RestRequest(endPoint, Method.GET, DataFormat.Json);
             return await client.ExecuteAsync(request);

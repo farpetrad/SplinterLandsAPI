@@ -20,6 +20,15 @@ namespace SplinterLandsAPI.Test
             Assert.IsNotNull(cardSet);
             Assert.IsNotNull(cardSet.Cards);
             Assert.IsTrue(cardSet.Cards.Count > 0);
+
+            cardSet = null;
+            var task = client.GetCardsAsync();
+            Task.WaitAll(task);
+            cardSet = task.Result;
+
+            Assert.IsNotNull(cardSet);
+            Assert.IsNotNull(cardSet.Cards);
+            Assert.IsTrue(cardSet.Cards.Count > 0);
         }
 
         [TestMethod]
@@ -38,6 +47,15 @@ namespace SplinterLandsAPI.Test
         {
             var client = new SplinterLandsClient(Log);
             var cardDetails = client.GetCardDetails("C-B3HJQSQCPC");
+
+            Assert.IsNotNull(cardDetails);
+            Assert.IsTrue(cardDetails.Edition != SetEditionEnum.Invalid);
+            Assert.IsTrue(cardDetails.Details.Id > 0);
+
+            cardDetails = null;
+            var task = client.GetCardDetailsAsync("C-B3HJQSQCPC");
+            Task.WaitAll(task);
+            cardDetails = task.Result;
 
             Assert.IsNotNull(cardDetails);
             Assert.IsTrue(cardDetails.Edition != SetEditionEnum.Invalid);

@@ -19,18 +19,11 @@ namespace SplinterLandsAPI
         {
             try
             {
-                var response = GetClientResponse("cards/get_details");
-                if (response != null && response.StatusCode == System.Net.HttpStatusCode.OK &&
-                    response.Content.Length > 0)
+                var set = new CardSet()
                 {
-
-                    var set = new CardSet()
-                    {
-                        Cards = JArray.Parse(response.Content).ToObject<List<Card>>() ?? new List<Card>()
-                    };
-                    return set;
-                }
-                throw new Exception($"GetCards - Invalid response {response?.StatusCode}");
+                    Cards = GetClientResponse<List<Card>>("cards/get_details")
+                };
+                return set;
             }
             catch (Exception ex)
             {
@@ -43,18 +36,11 @@ namespace SplinterLandsAPI
         {
             try
             {
-                var response = await GetClientResponseAsync("cards/get_details");
-                if (response != null && response.StatusCode == System.Net.HttpStatusCode.OK &&
-                    response.Content.Length > 0)
+                var set = new CardSet()
                 {
-
-                    var set = new CardSet()
-                    {
-                        Cards = JArray.Parse(response.Content).ToObject<List<Card>>() ?? new List<Card>()
-                    };
-                    return set;
-                }
-                throw new Exception($"GetCardsAsync - Invalid response {response?.StatusCode}");
+                    Cards = await GetClientResponseAsync<List<Card>>("cards/get_details")
+                };
+                return set;
             }
             catch (Exception ex)
             {
@@ -68,15 +54,7 @@ namespace SplinterLandsAPI
             if(string.IsNullOrEmpty(playerName))   throw new ArgumentException("playerName must be provided", nameof(playerName));
             try
             {
-                var response = GetClientResponse($"battle/history?player={playerName}", false);
-                if (response != null && response.StatusCode == System.Net.HttpStatusCode.OK &&
-                    response.Content.Length > 0)
-                {
-                    var battles = JsonConvert.DeserializeObject<PlayerBattles>(response.Content) ?? new PlayerBattles() { Player = playerName };
-
-                    return battles;
-                }
-                throw new Exception($"GetBattlesForPlayer - Invalid response {response?.StatusCode}");
+                return GetClientResponse<PlayerBattles>($"battle/history?player={playerName}", false);
             }
             catch(Exception ex)
             {
@@ -90,15 +68,7 @@ namespace SplinterLandsAPI
             if (string.IsNullOrEmpty(playerName)) throw new ArgumentException("playerName must be provided", nameof(playerName));
             try
             {
-                var response = await GetClientResponseAsync($"battle/history?player={playerName}", false);
-                if (response != null && response.StatusCode == System.Net.HttpStatusCode.OK &&
-                    response.Content.Length > 0)
-                {
-                    var battles = JsonConvert.DeserializeObject<PlayerBattles>(response.Content) ?? new PlayerBattles() { Player = playerName };
-
-                    return battles;
-                }
-                throw new Exception($"GetBattlesForPlayerAsync - Invalid response {response?.StatusCode}");
+                return await GetClientResponseAsync<PlayerBattles>($"battle/history?player={playerName}", false);
             }
             catch (Exception ex)
             {
@@ -112,14 +82,7 @@ namespace SplinterLandsAPI
             if(string.IsNullOrEmpty(Uid)) throw new ArgumentException("Uid must be provided", nameof(Uid));
             try
             {
-                var response = GetClientResponse($"cards/find?ids={Uid}");
-                if (response != null && response.StatusCode == System.Net.HttpStatusCode.OK &&
-                    response.Content.Length > 0)
-                {
-                    var details = JsonConvert.DeserializeObject<List<CardDetails>>(response.Content) ?? new List<CardDetails>();
-                    return details.First();
-                }
-                throw new Exception($"GetCardDetails - Invalid response {response?.StatusCode}");
+                return GetClientResponse<List<CardDetails>>($"cards/find?ids={Uid}").First();
             }
             catch(Exception ex)
             {
@@ -133,14 +96,7 @@ namespace SplinterLandsAPI
             if (string.IsNullOrEmpty(Uid)) throw new ArgumentException("Uid must be provided", nameof(Uid));
             try
             {
-                var response = await GetClientResponseAsync($"cards/find?ids={Uid}");
-                if (response != null && response.StatusCode == System.Net.HttpStatusCode.OK &&
-                    response.Content.Length > 0)
-                {
-                    var details = JsonConvert.DeserializeObject<List<CardDetails>>(response.Content) ?? new List<CardDetails>();
-                    return details.First();
-                }
-                throw new Exception($"GetCardDetailsAsync - Invalid response {response?.StatusCode}");
+                return (await GetClientResponseAsync<List<CardDetails>>($"cards/find?ids={Uid}")).First();
             }
             catch (Exception ex)
             {
@@ -154,14 +110,7 @@ namespace SplinterLandsAPI
             if (string.IsNullOrEmpty(playerName)) throw new ArgumentException("Player name must be provided", nameof(playerName));
             try
             {
-                var response = GetClientResponse($"players/quests?username={playerName}", false);
-                if(response != null && response.StatusCode == System.Net.HttpStatusCode.OK &&
-                    response.Content.Length > 0)
-                {
-                    var quest = JsonConvert.DeserializeObject<List<PlayerQuest>>(response.Content) ?? new List<PlayerQuest>() { new PlayerQuest() { Player = playerName } };
-                    return quest.First();
-                }
-                throw new Exception($"GetPlayersCurrentQuest - Invalid response {response?.StatusCode}");
+                return GetClientResponse<List<PlayerQuest>>($"players/quests?username={playerName}", false).First();
             }
             catch(Exception ex)
             {
@@ -175,14 +124,7 @@ namespace SplinterLandsAPI
             if (string.IsNullOrEmpty(playerName)) throw new ArgumentException("Player name must be provided", nameof(playerName));
             try
             {
-                var response = await GetClientResponseAsync($"players/quests?username={playerName}", false);
-                if (response != null && response.StatusCode == System.Net.HttpStatusCode.OK &&
-                    response.Content.Length > 0)
-                {
-                    var quest = JsonConvert.DeserializeObject<List<PlayerQuest>>(response.Content) ?? new List<PlayerQuest>() { new PlayerQuest() { Player = playerName } };
-                    return quest.First();
-                }
-                throw new Exception($"GetPlayerCurrentQuestAsync - Invalid response {response?.StatusCode}");
+                return (await GetClientResponseAsync<List<PlayerQuest>>($"players/quests?username={playerName}", false)).First();
             }
             catch (Exception ex)
             {
@@ -197,14 +139,7 @@ namespace SplinterLandsAPI
             if (edition == SetEditionEnum.Invalid) throw new ArgumentException("A valid edition must be specified", nameof(edition));
             try
             {
-                var response = GetClientResponse($"players/pack_purchases?edition={Convert.ToInt32(edition)}&username={playerName}", false);
-                if (response != null && response.StatusCode == System.Net.HttpStatusCode.OK &&
-                    response.Content.Length > 0)
-                {
-                    return JsonConvert.DeserializeObject<EditionPackPurchases>(response.Content) ?? new EditionPackPurchases() { Player = playerName };
-
-                }
-                throw new Exception($"GetPackPurchaesForPlayerByEdition - Invalid response {response?.StatusCode}");
+                return GetClientResponse<EditionPackPurchases>($"players/pack_purchases?edition={Convert.ToInt32(edition)}&username={playerName}", false);
             }
             catch (Exception ex)
             {
@@ -219,14 +154,7 @@ namespace SplinterLandsAPI
             if (edition == SetEditionEnum.Invalid) throw new ArgumentException("A valid edition must be specified", nameof(edition));
             try
             {
-                var response = await GetClientResponseAsync($"players/pack_purchases?edition={Convert.ToInt32(edition)}&username={playerName}", false);
-                if (response != null && response.StatusCode == System.Net.HttpStatusCode.OK &&
-                    response.Content.Length > 0)
-                {
-                    return JsonConvert.DeserializeObject<EditionPackPurchases>(response.Content) ?? new EditionPackPurchases() { Player = playerName };
-
-                }
-                throw new Exception($"GetPackPurchaesForPlayerByEditionAsync - Invalid response {response?.StatusCode}");
+                return await GetClientResponseAsync<EditionPackPurchases>($"players/pack_purchases?edition={Convert.ToInt32(edition)}&username={playerName}", false);
             }
             catch (Exception ex)
             {
@@ -240,14 +168,7 @@ namespace SplinterLandsAPI
             if (string.IsNullOrEmpty(playerName)) throw new ArgumentException("Player name must be provided", nameof(playerName));
             try
             {
-                var response = GetClientResponse($"market/active_rentals?owner={playerName}", false);
-                if (response != null && response.StatusCode == System.Net.HttpStatusCode.OK &&
-                    response.Content.Length > 0)
-                {
-                    return JsonConvert.DeserializeObject<List<RentalCard>>(response.Content) ?? new List<RentalCard>();
-
-                }
-                throw new Exception($"GetActiveRentalsForPlayer - Invalid response {response?.StatusCode}");
+                return GetClientResponse<List<RentalCard>>($"market/active_rentals?owner={playerName}", false);
             }
             catch (Exception ex)
             {
@@ -261,14 +182,7 @@ namespace SplinterLandsAPI
             if (string.IsNullOrEmpty(playerName)) throw new ArgumentException("Player name must be provided", nameof(playerName));
             try
             {
-                var response = await GetClientResponseAsync($"market/active_rentals?owner={playerName}", false);
-                if (response != null && response.StatusCode == System.Net.HttpStatusCode.OK &&
-                    response.Content.Length > 0)
-                {
-                    return JsonConvert.DeserializeObject<List<RentalCard>>(response.Content) ?? new List<RentalCard>();
-
-                }
-                throw new Exception($"GetActiveRentalsForPlayer - Invalid response {response?.StatusCode}");
+                return await GetClientResponseAsync<List<RentalCard>>($"market/active_rentals?owner={playerName}", false);
             }
             catch (Exception ex)
             {
@@ -282,14 +196,7 @@ namespace SplinterLandsAPI
             if (string.IsNullOrEmpty(playerName)) throw new ArgumentException("Player name must be provided", nameof(playerName));
             try
             {
-                var response = GetClientResponse($"market/active_rentals?renter={playerName}", false);
-                if (response != null && response.StatusCode == System.Net.HttpStatusCode.OK &&
-                    response.Content.Length > 0)
-                {
-                    return JsonConvert.DeserializeObject<List<RentalCard>>(response.Content) ?? new List<RentalCard>();
-
-                }
-                throw new Exception($"GetActivelyRentaledCardsForPlayer - Invalid response {response?.StatusCode}");
+                return GetClientResponse<List<RentalCard>>($"market/active_rentals?renter={playerName}", false);
             }
             catch (Exception ex)
             {
@@ -303,14 +210,7 @@ namespace SplinterLandsAPI
             if (string.IsNullOrEmpty(playerName)) throw new ArgumentException("Player name must be provided", nameof(playerName));
             try
             {
-                var response = await GetClientResponseAsync($"market/active_rentals?renter={playerName}", false);
-                if (response != null && response.StatusCode == System.Net.HttpStatusCode.OK &&
-                    response.Content.Length > 0)
-                {
-                    return JsonConvert.DeserializeObject<List<RentalCard>>(response.Content) ?? new List<RentalCard>();
-
-                }
-                throw new Exception($"GetActivelyRentaledCardsForPlayer - Invalid response {response?.StatusCode}");
+               return await GetClientResponseAsync<List<RentalCard>>($"market/active_rentals?renter={playerName}", false);
             }
             catch (Exception ex)
             {
@@ -324,14 +224,7 @@ namespace SplinterLandsAPI
             if (string.IsNullOrEmpty(playerName)) throw new ArgumentException("Player name must be provided", nameof(playerName));
             try
             {
-                var response = GetClientResponse($"players/balances?username={playerName}", false);
-                if (response != null && response.StatusCode == System.Net.HttpStatusCode.OK &&
-                    response.Content.Length > 0)
-                {
-                    return JsonConvert.DeserializeObject<List<Currency>>(response.Content) ?? new List<Currency>();
-
-                }
-                throw new Exception($"GetTokenBalancesForPlayer - Invalid response {response?.StatusCode}");
+                return GetClientResponse<List<Currency>>($"players/balances?username={playerName}", false);
             }
             catch (Exception ex)
             {
@@ -344,14 +237,7 @@ namespace SplinterLandsAPI
             if (string.IsNullOrEmpty(playerName)) throw new ArgumentException("Player name must be provided", nameof(playerName));
             try
             {
-                var response = await GetClientResponseAsync($"players/balances?username={playerName}", false);
-                if (response != null && response.StatusCode == System.Net.HttpStatusCode.OK &&
-                    response.Content.Length > 0)
-                {
-                    return JsonConvert.DeserializeObject<List<Currency>>(response.Content) ?? new List<Currency>();
-
-                }
-                throw new Exception($"GetTokenBalancesForPlayerAsync - Invalid response {response?.StatusCode}");
+                return await GetClientResponseAsync<List<Currency>>($"players/balances?username={playerName}", false);
             }
             catch (Exception ex)
             {
@@ -365,15 +251,7 @@ namespace SplinterLandsAPI
             if (string.IsNullOrEmpty(playerName)) throw new ArgumentException("Player name must be provided", nameof(playerName));
             try
             {
-                var response = GetClientResponse($"/players/referrals?username={playerName}");
-                if (response != null && response.StatusCode == System.Net.HttpStatusCode.OK &&
-                    response.Content.Length > 0)
-                {
-                    return JsonConvert.DeserializeObject<ReferralCollection>(response.Content) ?? new ReferralCollection();
-
-                }
-                throw new Exception($"GetReferralsForPlayer - Invalid response {response?.StatusCode}");
-                
+                return GetClientResponse<ReferralCollection>($"/players/referrals?username={playerName}");
             }
             catch(Exception ex)
             {
@@ -388,15 +266,7 @@ namespace SplinterLandsAPI
             if (string.IsNullOrEmpty(playerName)) throw new ArgumentException("Player name must be provided", nameof(playerName));
             try
             {
-                var response = await GetClientResponseAsync($"/players/referrals?username={playerName}");
-                if (response != null && response.StatusCode == System.Net.HttpStatusCode.OK &&
-                    response.Content.Length > 0)
-                {
-                    return JsonConvert.DeserializeObject<ReferralCollection>(response.Content) ?? new ReferralCollection();
-
-                }
-                throw new Exception($"GetReferralsForPlayerAsync - Invalid response {response?.StatusCode}");
-
+                return await GetClientResponseAsync<ReferralCollection>($"/players/referrals?username={playerName}");
             }
             catch (Exception ex)
             {
@@ -405,25 +275,41 @@ namespace SplinterLandsAPI
             }
         }
 
-        private IRestResponse GetClientResponse(string endPoint, bool api1 = true)
+        private T GetClientResponse<T>(string endPoint, bool api1 = true) where T: new()
         {
-            string api = string.Empty;
-            if (api1)
+            try
             {
-                api = "https://api.splinterlands.io";
-            }
-            else
-            {
-                api = "https://api2.splinterlands.com";
-            }
-            var client = new RestClient(api);
-            client.UserAgent = UserAgent;
+                string api = string.Empty;
+                if (api1)
+                {
+                    api = "https://api.splinterlands.io";
+                }
+                else
+                {
+                    api = "https://api2.splinterlands.com";
+                }
+                var client = new RestClient(api);
+                client.UserAgent = UserAgent;
 
-            var request = new RestRequest(endPoint, Method.GET, DataFormat.Json);
-            return client.Get(request);
+                var request = new RestRequest(endPoint, Method.GET, DataFormat.Json);
+                var response = client.Get(request);
+
+                if (response != null && response.StatusCode == System.Net.HttpStatusCode.OK &&
+                    response.Content.Length > 0)
+                {
+                    return JsonConvert.DeserializeObject<T>(response.Content) ?? new T();
+
+                }
+                throw new Exception($"GetClientResponse - Invalid response {response?.StatusCode}");
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, "An error occured executing rest request");
+                throw;
+            }
         }
 
-        private async Task<IRestResponse> GetClientResponseAsync(string endPoint, bool api1 = true)
+        private async Task<T> GetClientResponseAsync<T>(string endPoint, bool api1 = true) where T: new()
         {
             string api = string.Empty;
             if (api1)
@@ -438,7 +324,15 @@ namespace SplinterLandsAPI
             client.UserAgent = UserAgent;
 
             var request = new RestRequest(endPoint, Method.GET, DataFormat.Json);
-            return await client.ExecuteAsync(request);
+            var response = await client.ExecuteAsync(request);
+
+            if (response != null && response.StatusCode == System.Net.HttpStatusCode.OK &&
+                    response.Content.Length > 0)
+            {
+                return JsonConvert.DeserializeObject<T>(response.Content) ?? new T();
+
+            }
+            throw new Exception($"GetClientResponseAsync - Invalid response {response?.StatusCode}");
         }
     }
 }

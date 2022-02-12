@@ -319,6 +319,47 @@ namespace SplinterLandsAPI
             }
         }
 
+        public List<Currency> GetTokenBalancesForPlayer(string playerName)
+        {
+            if (string.IsNullOrEmpty(playerName)) throw new ArgumentException("Player name must be provided", nameof(playerName));
+            try
+            {
+                var response = GetClientResponse($"players/balances?username={playerName}", false);
+                if (response != null && response.StatusCode == System.Net.HttpStatusCode.OK &&
+                    response.Content.Length > 0)
+                {
+                    return JsonConvert.DeserializeObject<List<Currency>>(response.Content) ?? new List<Currency>();
+
+                }
+                throw new Exception($"GetTokenBalancesForPlayer - Invalid response {response?.StatusCode}");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occured while calling GetTokenBalancesForPlayer");
+                return new List<Currency>();
+            }
+        }
+        public async Task<List<Currency>> GetTokenBalancesForPlayerAsync(string playerName)
+        {
+            if (string.IsNullOrEmpty(playerName)) throw new ArgumentException("Player name must be provided", nameof(playerName));
+            try
+            {
+                var response = await GetClientResponseAsync($"players/balances?username={playerName}", false);
+                if (response != null && response.StatusCode == System.Net.HttpStatusCode.OK &&
+                    response.Content.Length > 0)
+                {
+                    return JsonConvert.DeserializeObject<List<Currency>>(response.Content) ?? new List<Currency>();
+
+                }
+                throw new Exception($"GetTokenBalancesForPlayerAsync - Invalid response {response?.StatusCode}");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occured while calling GetTokenBalancesForPlayerAsync");
+                return new List<Currency>();
+            }
+        }
+
         public ReferralCollection GetReferralsForPlayer(string playerName)
         {
             if (string.IsNullOrEmpty(playerName)) throw new ArgumentException("Player name must be provided", nameof(playerName));

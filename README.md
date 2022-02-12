@@ -29,6 +29,7 @@ The client is defined as implementing the ISplinterLandsClient interface which i
 * GetPackPurchaesForPlayerByEdition - returns an object describing the purchases made for packs by edition
 * GetActiveRentalsForPlayer - returns a list of active rentals for a player
 * GetActivelyRentaledCardsForPlayer - returns a list of actively rented cards for a player
+* GetTokenBalancesForPlayer - returns a list of all tokens held by the player and their balances
 
 # Known Issues
 - If you hit any of these API's in quick sucession you will get rate limited'

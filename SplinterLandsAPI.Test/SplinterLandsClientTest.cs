@@ -162,5 +162,23 @@ namespace SplinterLandsAPI.Test
             Assert.IsNotNull(rentals);
             Assert.IsTrue(rentals.Count >= 0);
         }
+
+        [TestMethod]
+        public void TestPlayerTokenBalances()
+        {
+            var client = new SplinterLandsClient(Log);
+            var balances = client.GetTokenBalancesForPlayer("farpetrad");
+
+            Assert.IsNotNull(balances);
+            Assert.IsTrue(balances.Count > 0);
+            balances = null;
+
+            var task = client.GetTokenBalancesForPlayerAsync("farpetrad");
+            Task.WaitAll(task);
+            balances = task.Result;
+
+            Assert.IsNotNull(balances);
+            Assert.IsTrue(balances.Count > 0);
+        }
     }
 }

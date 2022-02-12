@@ -15,5 +15,7 @@ namespace SplinterLandsAPI
         Task<List<RentalCard>> GetActiveRentalsForPlayerAsync(string playerName);
         List<RentalCard> GetActivelyRentaledCardsForPlayer(string playerName);
         Task<List<RentalCard>> GetActivelyRentaledCardsForPlayerAsync(string playerName);
+        List<Currency> GetTokenBalancesForPlayer(string playerName);
+        Task<List<Currency>> GetTokenBalancesForPlayerAsync(string playerName);
     }
 }

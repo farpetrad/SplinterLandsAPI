@@ -1,7 +1,11 @@
+using Cryptography.ECDSA;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using sl_Hive.Engine;
 using SplinterLands.DTOs.Enums;
+using System;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace SplinterLandsAPI.Test
@@ -10,6 +14,20 @@ namespace SplinterLandsAPI.Test
     public class SplinterLandsClientTest
     {
         private ILogger Log => new Mock<ILogger>().Object;
+
+        [TestMethod]
+        public void LoginTest()
+        {
+            var user = "YOUR_USERNAME_HERE";
+            var client = new SplinterLandsClient(Log);
+            var ts = new DateTimeOffset(DateTime.Now).ToUnixTimeMilliseconds().ToString();
+            var hash = Sha256Manager.GetHash(Encoding.ASCII.GetBytes(user + ts));
+            var sig = Secp256K1Manager.SignCompressedCompact(hash, CBase58.DecodePrivateWif("YOUR_KEY_HERE"));
+            var signature = Hex.ToString(sig);
+            var result = client.Login(user, signature, ts);
+            Assert.IsNotNull(result);
+        }
+
 
         [TestMethod]
         public void GetWorksiteDetails()

@@ -1,10 +1,10 @@
 ﻿using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using RestSharp;
 using SplinterLands.DTOs.Enums;
 using SplinterLands.DTOs.Models;
 using System.Net;
+using System.Text.RegularExpressions;
 
 namespace SplinterLandsAPI
 {
@@ -18,15 +18,93 @@ namespace SplinterLandsAPI
             _logger = logger;
         }
 
+        private static string RandomString(int length)
+        {
+            var random = new Random();
+            const string chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            return new string(Enumerable.Repeat(chars, length)
+                .Select(s => s[random.Next(s.Length)]).ToArray());
+        }
+
+        private static string DoQuickRegex(string Pattern, string Match)
+        {
+            Regex r = new(Pattern, RegexOptions.Singleline);
+            return r.Match(Match).Groups[1].Value;
+        }
+
+        /// <summary>
+        /// Returns a player specific token used for requests
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="signature"></param>
+        /// <param name="ts"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        public string Login(string username, string signature, string ts)
+        {
+            if (string.IsNullOrEmpty(username)) throw new ArgumentNullException("username must be provided");
+            if (string.IsNullOrEmpty(signature)) throw new ArgumentNullException("signature must be provided");
+
+            var bid = "bid_" + SplinterLandsClient.RandomString(20);
+            var sid = "sid_" + SplinterLandsClient.RandomString(20);
+            
+            var options = new RestClientOptions()
+            {
+                CookieContainer = _cookieJar,
+                UserAgent = UserAgent,
+                BaseUrl = new Uri("https://api2.splinterlands.com"),
+            };
+            using var client = new RestClient(options);
+
+            var request = new RestRequest($"players/login?name={username}&ref=&browser_id={bid}&session_id={sid}&sig={signature}&ts={ts}") { Method = Method.Get, RequestFormat = DataFormat.Json };
+            var response = client.Get(request);
+            if (response != null && response.StatusCode == System.Net.HttpStatusCode.OK &&
+                    response.Content.Length > 0)
+            {
+                var token = DoQuickRegex("\"name\":\"" + username + "\",\"token\":\"([A-Z0-9]{10})\"", response.Content);
+                return token;
+
+            }
+            return "";
+        }
+
+        public async Task<string> LoginAsync(string username, string signature, string ts)
+        {
+            if (string.IsNullOrEmpty(username)) throw new ArgumentNullException("username must be provided");
+            if (string.IsNullOrEmpty(signature)) throw new ArgumentNullException("signature must be provided");
+
+            var bid = "bid_" + SplinterLandsClient.RandomString(20);
+            var sid = "sid_" + SplinterLandsClient.RandomString(20);
+
+            var options = new RestClientOptions()
+            {
+                CookieContainer = _cookieJar,
+                UserAgent = UserAgent,
+                BaseUrl = new Uri("https://api2.splinterlands.com"),
+            };
+            using var client = new RestClient(options);
+
+            var request = new RestRequest($"players/login?name={username}&ref=&browser_id={bid}&session_id={sid}&sig={signature}&ts={ts}") { Method = Method.Get, RequestFormat = DataFormat.Json };
+            var response = await client.GetAsync(request);
+            if (response != null && response.StatusCode == System.Net.HttpStatusCode.OK &&
+                    response.Content.Length > 0)
+            {
+                var token = DoQuickRegex("\"name\":\"" + username + "\",\"token\":\"([A-Z0-9]{10})\"", response.Content);
+                return token;
+
+            }
+            return "";
+        }
+
         public LandWorksiteDetailsResponse GetActiveWorksite(string deed_uid)
         {
-            if(string.IsNullOrEmpty(deed_uid)) throw new ArgumentException($"${nameof(deed_uid)} must be provided");
+            if(string.IsNullOrEmpty(deed_uid)) throw new ArgumentNullException($"${nameof(deed_uid)} must be provided");
             return GetClientResponse<LandWorksiteDetailsResponse>($"land/projects/deed/{deed_uid}/active", api1: false, vnext: true);
         }
 
         public async Task<LandWorksiteDetailsResponse> GetActiveWorksiteAsync(string deed_uid)
         {
-            if (string.IsNullOrEmpty(deed_uid)) throw new ArgumentException($"${nameof(deed_uid)} must be provided");
+            if (string.IsNullOrEmpty(deed_uid)) throw new ArgumentNullException($"${nameof(deed_uid)} must be provided");
             return await GetClientResponseAsync<LandWorksiteDetailsResponse>($"land/projects/deed/{deed_uid}/active", api1: false, vnext: true);
         }
 
@@ -307,11 +385,15 @@ namespace SplinterLandsAPI
                 {
                     api = "https://vapi.splinterlands.com";
                 }
-                var client = new RestClient(api);
-                client.UserAgent = UserAgent;
-                client.CookieContainer = _cookieJar;
+                var options = new RestClientOptions()
+                {
+                    CookieContainer = _cookieJar,
+                    UserAgent = UserAgent,
+                    BaseUrl = new Uri(api),
+                };
+                using var client = new RestClient(options);
 
-                var request = new RestRequest(endPoint, Method.GET, DataFormat.Json);
+                var request = new RestRequest(endPoint) { Method = Method.Get, RequestFormat = DataFormat.Json };
                 var response = client.Get(request);
 
                 if (response != null && response.StatusCode == System.Net.HttpStatusCode.OK &&
@@ -343,11 +425,15 @@ namespace SplinterLandsAPI
             {
                 api = "https://vapi.splinterlands.com";
             }
-            var client = new RestClient(api);
-            client.UserAgent = UserAgent;
-            client.CookieContainer = _cookieJar;
+            var options = new RestClientOptions()
+            {
+                CookieContainer = _cookieJar,
+                UserAgent = UserAgent,
+                BaseUrl = new Uri(api),
+            };
+            using var client = new RestClient(options);
 
-            var request = new RestRequest(endPoint, Method.GET, DataFormat.Json);
+            var request = new RestRequest(endPoint) { Method = Method.Get, RequestFormat = DataFormat.Json };
             var response = await client.ExecuteAsync(request);
 
             if (response != null && response.StatusCode == System.Net.HttpStatusCode.OK &&

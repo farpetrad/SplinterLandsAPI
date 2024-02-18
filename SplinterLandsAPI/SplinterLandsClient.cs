@@ -4,6 +4,7 @@ using Newtonsoft.Json.Linq;
 using RestSharp;
 using SplinterLands.DTOs.Enums;
 using SplinterLands.DTOs.Models;
+using System.Net;
 
 namespace SplinterLandsAPI
 {
@@ -11,6 +12,7 @@ namespace SplinterLandsAPI
     {
         private readonly ILogger _logger;
         private readonly string UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36";
+        private readonly CookieContainer _cookieJar = new CookieContainer();
         public SplinterLandsClient(ILogger logger)
         {
             _logger = logger;
@@ -290,6 +292,7 @@ namespace SplinterLandsAPI
                 }
                 var client = new RestClient(api);
                 client.UserAgent = UserAgent;
+                client.CookieContainer = _cookieJar;
 
                 var request = new RestRequest(endPoint, Method.GET, DataFormat.Json);
                 var response = client.Get(request);
@@ -322,6 +325,7 @@ namespace SplinterLandsAPI
             }
             var client = new RestClient(api);
             client.UserAgent = UserAgent;
+            client.CookieContainer = _cookieJar;
 
             var request = new RestRequest(endPoint, Method.GET, DataFormat.Json);
             var response = await client.ExecuteAsync(request);

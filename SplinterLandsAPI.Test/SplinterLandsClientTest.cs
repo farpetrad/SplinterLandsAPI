@@ -12,6 +12,15 @@ namespace SplinterLandsAPI.Test
         private ILogger Log => new Mock<ILogger>().Object;
 
         [TestMethod]
+        public void GetWorksiteDetails()
+        {
+            var deed_uid = "I-294-07d0b7f3a611d9";
+            var client = new SplinterLandsClient(Log);
+            var result = client.GetActiveWorksite(deed_uid);
+            Assert.IsNotNull(result);
+        }
+
+        [TestMethod]
         public void TestGetCards()
         {
             var client = new SplinterLandsClient(Log);

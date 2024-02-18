@@ -17,6 +17,19 @@ namespace SplinterLandsAPI
         {
             _logger = logger;
         }
+
+        public LandWorksiteDetailsResponse GetActiveWorksite(string deed_uid)
+        {
+            if(string.IsNullOrEmpty(deed_uid)) throw new ArgumentException($"${nameof(deed_uid)} must be provided");
+            return GetClientResponse<LandWorksiteDetailsResponse>($"land/projects/deed/{deed_uid}/active", api1: false, vnext: true);
+        }
+
+        public async Task<LandWorksiteDetailsResponse> GetActiveWorksiteAsync(string deed_uid)
+        {
+            if (string.IsNullOrEmpty(deed_uid)) throw new ArgumentException($"${nameof(deed_uid)} must be provided");
+            return await GetClientResponseAsync<LandWorksiteDetailsResponse>($"land/projects/deed/{deed_uid}/active", api1: false, vnext: true);
+        }
+
         public CardSet GetCards()
         {
             try
@@ -277,7 +290,7 @@ namespace SplinterLandsAPI
             }
         }
 
-        private T GetClientResponse<T>(string endPoint, bool api1 = true) where T: new()
+        private T GetClientResponse<T>(string endPoint, bool api1 = true, bool vnext = false) where T: new()
         {
             try
             {
@@ -286,9 +299,13 @@ namespace SplinterLandsAPI
                 {
                     api = "https://api.splinterlands.io";
                 }
-                else
+                else if (!vnext)
                 {
                     api = "https://api2.splinterlands.com";
+                }
+                else if (vnext)
+                {
+                    api = "https://vapi.splinterlands.com";
                 }
                 var client = new RestClient(api);
                 client.UserAgent = UserAgent;
@@ -312,16 +329,19 @@ namespace SplinterLandsAPI
             }
         }
 
-        private async Task<T> GetClientResponseAsync<T>(string endPoint, bool api1 = true) where T: new()
+        private async Task<T> GetClientResponseAsync<T>(string endPoint, bool api1 = true, bool vnext = false) where T: new()
         {
             string api = string.Empty;
             if (api1)
             {
                 api = "https://api.splinterlands.io";
             }
-            else
+            else if(!vnext)
             {
                 api = "https://api2.splinterlands.com";
+            } else if(vnext)
+            {
+                api = "https://vapi.splinterlands.com";
             }
             var client = new RestClient(api);
             client.UserAgent = UserAgent;

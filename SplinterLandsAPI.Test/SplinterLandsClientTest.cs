@@ -23,6 +23,15 @@ namespace SplinterLandsAPI.Test
 
             PrivatePostingKey = Configuration["KEY"] ?? string.Empty;
             User = Configuration["HIVEUSERNAME"] ?? string.Empty;
+
+            if(PrivatePostingKey == string.Empty)
+            {
+                PrivatePostingKey = Environment.GetEnvironmentVariable("KEY") ?? string.Empty;
+            }
+            if(User == string.Empty)
+            {
+                User = Environment.GetEnvironmentVariable("HIVEUSERNAME") ?? string.Empty;
+            }
         }
         private ILogger Log => new Mock<ILogger>().Object;
         private readonly string User;

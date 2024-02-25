@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿
+
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace SplinterLands.DTOs.Models
@@ -14,14 +16,7 @@ namespace SplinterLands.DTOs.Models
         public int Player_2_rating_initial { get; set; } = -1;
         public int Player_1_rating_final { get; set; } = -1;
         public int Player_2_rating_final { get; set; } = -1;
-
-        public BattleDetails BattleDetails { get; set; } = new BattleDetails();
-        public string Details
-        {
-            get => BattleDetails == null ? "" : BattleDetails.ToString();
-            set => BattleDetails = value != null ? (JsonConvert.DeserializeObject<BattleDetails>(value)) ?? new BattleDetails()
-                : new BattleDetails();
-        }
+        public Details Details { get; set; } = new Details();
         public DateTime? Created_Date { get; set; } = null;
         public string Match_Type { get;set; } = string.Empty;
         public int Mana_Cap { get; set; } = -1;

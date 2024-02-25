@@ -1,10 +1,11 @@
 ﻿using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Serialization;
 using RestSharp;
 using SplinterLands.DTOs.Enums;
 using SplinterLands.DTOs.Models;
 using System.Net;
+using System.Text.RegularExpressions;
 
 namespace SplinterLandsAPI
 {
@@ -17,6 +18,97 @@ namespace SplinterLandsAPI
         {
             _logger = logger;
         }
+
+        private static string RandomString(int length)
+        {
+            var random = new Random();
+            const string chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            return new string(Enumerable.Repeat(chars, length)
+                .Select(s => s[random.Next(s.Length)]).ToArray());
+        }
+
+        private static string DoQuickRegex(string Pattern, string Match)
+        {
+            Regex r = new(Pattern, RegexOptions.Singleline);
+            return r.Match(Match).Groups[1].Value;
+        }
+
+        /// <summary>
+        /// Returns a player specific token used for requests
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="signature"></param>
+        /// <param name="ts"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        public string Login(string username, string signature, string ts)
+        {
+            if (string.IsNullOrEmpty(username)) throw new ArgumentNullException("username must be provided");
+            if (string.IsNullOrEmpty(signature)) throw new ArgumentNullException("signature must be provided");
+
+            var bid = "bid_" + SplinterLandsClient.RandomString(20);
+            var sid = "sid_" + SplinterLandsClient.RandomString(20);
+            
+            var options = new RestClientOptions()
+            {
+                CookieContainer = _cookieJar,
+                UserAgent = UserAgent,
+                BaseUrl = new Uri("https://api2.splinterlands.com"),
+            };
+            using var client = new RestClient(options);
+
+            var request = new RestRequest($"players/login?name={username}&ref=&browser_id={bid}&session_id={sid}&sig={signature}&ts={ts}") { Method = Method.Get, RequestFormat = DataFormat.Json };
+            var response = client.Get(request);
+            if (response != null && response.StatusCode == HttpStatusCode.OK &&
+                    response?.Content?.Length > 0)
+            {
+                var token = DoQuickRegex("\"name\":\"" + username + "\",\"token\":\"([A-Z0-9]{10})\"", response.Content);
+                return token;
+
+            }
+            return "";
+        }
+
+        public async Task<string> LoginAsync(string username, string signature, string ts)
+        {
+            if (string.IsNullOrEmpty(username)) throw new ArgumentNullException("username must be provided");
+            if (string.IsNullOrEmpty(signature)) throw new ArgumentNullException("signature must be provided");
+
+            var bid = "bid_" + SplinterLandsClient.RandomString(20);
+            var sid = "sid_" + SplinterLandsClient.RandomString(20);
+
+            var options = new RestClientOptions()
+            {
+                CookieContainer = _cookieJar,
+                UserAgent = UserAgent,
+                BaseUrl = new Uri("https://api2.splinterlands.com"),
+            };
+            using var client = new RestClient(options);
+
+            var request = new RestRequest($"players/login?name={username}&ref=&browser_id={bid}&session_id={sid}&sig={signature}&ts={ts}") { Method = Method.Get, RequestFormat = DataFormat.Json };
+            var response = await client.GetAsync(request);
+            if (response != null && response.StatusCode == System.Net.HttpStatusCode.OK &&
+                    response?.Content?.Length > 0)
+            {
+                var token = DoQuickRegex("\"name\":\"" + username + "\",\"token\":\"([A-Z0-9]{10})\"", response.Content);
+                return token;
+
+            }
+            return "";
+        }
+
+        public LandWorksiteDetailsResponse GetActiveWorksite(string deed_uid)
+        {
+            if(string.IsNullOrEmpty(deed_uid)) throw new ArgumentNullException($"${nameof(deed_uid)} must be provided");
+            return GetClientResponse<LandWorksiteDetailsResponse>($"land/projects/deed/{deed_uid}/active", api1: false, vnext: true);
+        }
+
+        public async Task<LandWorksiteDetailsResponse> GetActiveWorksiteAsync(string deed_uid)
+        {
+            if (string.IsNullOrEmpty(deed_uid)) throw new ArgumentNullException($"${nameof(deed_uid)} must be provided");
+            return await GetClientResponseAsync<LandWorksiteDetailsResponse>($"land/projects/deed/{deed_uid}/active", api1: false, vnext: true);
+        }
+
         public CardSet GetCards()
         {
             try
@@ -51,12 +143,12 @@ namespace SplinterLandsAPI
             }
         }
 
-        public PlayerBattles GetBattlesForPlayer(string playerName)
+        public PlayerBattles GetBattlesForPlayer(string playerName, int leaderboard, string format, string token, string username)
         {
             if(string.IsNullOrEmpty(playerName))   throw new ArgumentException("playerName must be provided", nameof(playerName));
             try
             {
-                return GetClientResponse<PlayerBattles>($"battle/history?player={playerName}", false);
+                return GetClientResponse<PlayerBattles>($"battle/history2?player={playerName}&leaderboard={leaderboard}&format={format}&token={token}&username={username}", false);
             }
             catch(Exception ex)
             {
@@ -65,12 +157,12 @@ namespace SplinterLandsAPI
             }
         }
 
-        public async Task<PlayerBattles> GetBattlesForPlayerAsync(string playerName)
+        public async Task<PlayerBattles> GetBattlesForPlayerAsync(string playerName, int leaderboard, string format, string token, string username)
         {
             if (string.IsNullOrEmpty(playerName)) throw new ArgumentException("playerName must be provided", nameof(playerName));
             try
             {
-                return await GetClientResponseAsync<PlayerBattles>($"battle/history?player={playerName}", false);
+                return await GetClientResponseAsync<PlayerBattles>($"battle/history2?player={playerName}&leaderboard={leaderboard}&format={format}&token={token}&username={username}", false);
             }
             catch (Exception ex)
             {
@@ -248,12 +340,12 @@ namespace SplinterLandsAPI
             }
         }
 
-        public ReferralCollection GetReferralsForPlayer(string playerName)
+        public ReferralCollection GetReferralsForPlayer(string playerName, string token, int page = 1, int pageSize = 3)
         {
             if (string.IsNullOrEmpty(playerName)) throw new ArgumentException("Player name must be provided", nameof(playerName));
             try
             {
-                return GetClientResponse<ReferralCollection>($"/players/referrals?username={playerName}");
+                return GetClientResponse<ReferralCollection>($"/players/referral_users?username={playerName}&token={token}&page_size={pageSize}&page={page}");
             }
             catch(Exception ex)
             {
@@ -263,12 +355,12 @@ namespace SplinterLandsAPI
             
         }
 
-        public async Task<ReferralCollection> GetReferralsForPlayerAsync(string playerName)
+        public async Task<ReferralCollection> GetReferralsForPlayerAsync(string playerName, string token, int page = 1, int pageSize = 3)
         {
             if (string.IsNullOrEmpty(playerName)) throw new ArgumentException("Player name must be provided", nameof(playerName));
             try
             {
-                return await GetClientResponseAsync<ReferralCollection>($"/players/referrals?username={playerName}");
+                return await GetClientResponseAsync<ReferralCollection>($"/players/referral_users?username={playerName}&token={token}&page_size={pageSize}&page={page}");
             }
             catch (Exception ex)
             {
@@ -277,7 +369,7 @@ namespace SplinterLandsAPI
             }
         }
 
-        private T GetClientResponse<T>(string endPoint, bool api1 = true) where T: new()
+        private T GetClientResponse<T>(string endPoint, bool api1 = true, bool vnext = false) where T: new()
         {
             try
             {
@@ -286,21 +378,37 @@ namespace SplinterLandsAPI
                 {
                     api = "https://api.splinterlands.io";
                 }
-                else
+                else if (!vnext)
                 {
                     api = "https://api2.splinterlands.com";
                 }
-                var client = new RestClient(api);
-                client.UserAgent = UserAgent;
-                client.CookieContainer = _cookieJar;
+                else if (vnext)
+                {
+                    api = "https://vapi.splinterlands.com";
+                }
+                var options = new RestClientOptions()
+                {
+                    CookieContainer = _cookieJar,
+                    UserAgent = UserAgent,
+                    BaseUrl = new Uri(api),
+                };
+                using var client = new RestClient(options);
 
-                var request = new RestRequest(endPoint, Method.GET, DataFormat.Json);
+                var request = new RestRequest(endPoint) { Method = Method.Get, RequestFormat = DataFormat.Json };
                 var response = client.Get(request);
 
-                if (response != null && response.StatusCode == System.Net.HttpStatusCode.OK &&
-                    response.Content.Length > 0)
+                if (response != null && response.StatusCode == System.Net.HttpStatusCode.OK && response?.Content?.Length > 0)
                 {
-                    return JsonConvert.DeserializeObject<T>(response.Content) ?? new T();
+                    var settings = new JsonSerializerSettings
+                    {
+                        NullValueHandling = NullValueHandling.Ignore,
+                        MissingMemberHandling = MissingMemberHandling.Ignore,
+                        Error = (object sender, Newtonsoft.Json.Serialization.ErrorEventArgs errorArgs) =>
+                        {
+                            int stop = 0;
+                        }
+                    };
+                    return JsonConvert.DeserializeObject<T>(response.Content, settings) ?? new T();
 
                 }
                 throw new Exception($"GetClientResponse - Invalid response {response?.StatusCode}");
@@ -312,22 +420,29 @@ namespace SplinterLandsAPI
             }
         }
 
-        private async Task<T> GetClientResponseAsync<T>(string endPoint, bool api1 = true) where T: new()
+        private async Task<T> GetClientResponseAsync<T>(string endPoint, bool api1 = true, bool vnext = false) where T: new()
         {
             string api = string.Empty;
             if (api1)
             {
                 api = "https://api.splinterlands.io";
             }
-            else
+            else if(!vnext)
             {
                 api = "https://api2.splinterlands.com";
+            } else if(vnext)
+            {
+                api = "https://vapi.splinterlands.com";
             }
-            var client = new RestClient(api);
-            client.UserAgent = UserAgent;
-            client.CookieContainer = _cookieJar;
+            var options = new RestClientOptions()
+            {
+                CookieContainer = _cookieJar,
+                UserAgent = UserAgent,
+                BaseUrl = new Uri(api),
+            };
+            using var client = new RestClient(options);
 
-            var request = new RestRequest(endPoint, Method.GET, DataFormat.Json);
+            var request = new RestRequest(endPoint) { Method = Method.Get, RequestFormat = DataFormat.Json };
             var response = await client.ExecuteAsync(request);
 
             if (response != null && response.StatusCode == System.Net.HttpStatusCode.OK &&

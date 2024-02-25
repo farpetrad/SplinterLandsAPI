@@ -1,22 +1,26 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace SplinterLands.DTOs.Models
 {
-    public class BattleDetails
+    public partial class Details
     {
-        public string Seed { get; set; } = string.Empty;
+        [JsonProperty("winner")]
+        public string Winner { get; set; }
 
-        public List<BattleRound> Rounds { get; set; } = new List<BattleRound>();
-        public Team Team1 { get; set; } = new Team();
-        public Team Team2 { get; set; } = new Team();
-        public JArray Pre_Battle { get; set; } = new JArray();
+        [JsonProperty("loser", NullValueHandling = NullValueHandling.Ignore)]
+        public string Loser { get; set; }
 
-        public string Winner { get; set; } = string.Empty;
-        public string Loser { get; set; } = string.Empty;
+        [JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
+        public string Type { get; set; }
 
-        public override string ToString()
-        {
-            return $"{{ seed: { Seed }}}";
-        }
+        [JsonProperty("team1")]
+        public Team Team1 { get; set; }
+
+        [JsonProperty("team2", NullValueHandling = NullValueHandling.Ignore)]
+        public Team Team2 { get; set; }
+
+        [JsonProperty("seed", NullValueHandling = NullValueHandling.Ignore)]
+        public string Seed { get; set; }
     }
 }

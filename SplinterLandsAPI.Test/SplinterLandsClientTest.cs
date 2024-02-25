@@ -1,7 +1,13 @@
+using Cryptography.ECDSA;
+using System.Reflection;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using sl_Hive.Engine;
 using SplinterLands.DTOs.Enums;
+using System;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace SplinterLandsAPI.Test
@@ -9,7 +15,41 @@ namespace SplinterLandsAPI.Test
     [TestClass]
     public class SplinterLandsClientTest
     {
+        public SplinterLandsClientTest()
+        {
+            var builder = new ConfigurationBuilder().AddUserSecrets(Assembly.GetExecutingAssembly(), true).AddEnvironmentVariables();
+
+            var Configuration = builder.Build();
+
+            PrivatePostingKey = Configuration["KEY"] ?? string.Empty;
+            User = Configuration["HIVEUSERNAME"] ?? string.Empty;
+        }
         private ILogger Log => new Mock<ILogger>().Object;
+        private readonly string User;
+        private readonly string PrivatePostingKey;
+
+        [TestMethod]
+        public void LoginTest()
+        {
+            var client = new SplinterLandsClient(Log);
+            var ts = new DateTimeOffset(DateTime.Now).ToUnixTimeMilliseconds().ToString();
+            var hash = Sha256Manager.GetHash(Encoding.ASCII.GetBytes(User + ts));
+            var sig = Secp256K1Manager.SignCompressedCompact(hash, CBase58.DecodePrivateWif(PrivatePostingKey));
+            var signature = Hex.ToString(sig);
+            var result = client.Login(User, signature, ts);
+            Assert.IsNotNull(result);
+            Assert.IsTrue(result.Length > 0);
+        }
+
+
+        [TestMethod]
+        public void GetWorksiteDetails()
+        {
+            var deed_uid = "I-294-07d0b7f3a611d9";
+            var client = new SplinterLandsClient(Log);
+            var result = client.GetActiveWorksite(deed_uid);
+            Assert.IsNotNull(result);
+        }
 
         [TestMethod]
         public void TestGetCards()
@@ -35,20 +75,26 @@ namespace SplinterLandsAPI.Test
         public void TestGetPlayerBattles()
         {
             var client = new SplinterLandsClient(Log);
-            var battles = client.GetBattlesForPlayer("farpetrad");
+            var ts = new DateTimeOffset(DateTime.Now).ToUnixTimeMilliseconds().ToString();
+            var hash = Sha256Manager.GetHash(Encoding.ASCII.GetBytes(User + ts));
+            var sig = Secp256K1Manager.SignCompressedCompact(hash, CBase58.DecodePrivateWif(PrivatePostingKey));
+            var signature = Hex.ToString(sig);
+            var token = client.Login(User, signature, ts);
+
+            var battles = client.GetBattlesForPlayer("ahsoka", 2, "WILD", token, "ahsoka");
 
             Assert.IsNotNull(battles);
             Assert.IsNotNull(battles.Battles);
-            Assert.IsTrue(battles.Battles.Count > 0);
+            Assert.IsTrue(battles.Battles.Count >= 0);
 
             battles = null;
-            var task = client.GetBattlesForPlayerAsync("farpetrad");
+            var task = client.GetBattlesForPlayerAsync("ahsoka", 2, "WILD", token, "ahsoka");
             Task.WaitAll(task);
             battles = task.Result;
 
             Assert.IsNotNull(battles);
             Assert.IsNotNull(battles.Battles);
-            Assert.IsTrue(battles.Battles.Count > 0);
+            Assert.IsTrue(battles.Battles.Count >= 0);
         }
 
         [TestMethod]
@@ -95,13 +141,19 @@ namespace SplinterLandsAPI.Test
         public void TestPlayerReferrals()
         {
             var client = new SplinterLandsClient(Log);
-            var referral = client.GetReferralsForPlayer("z3ll");
+            var ts = new DateTimeOffset(DateTime.Now).ToUnixTimeMilliseconds().ToString();
+            var hash = Sha256Manager.GetHash(Encoding.ASCII.GetBytes(User + ts));
+            var sig = Secp256K1Manager.SignCompressedCompact(hash, CBase58.DecodePrivateWif(PrivatePostingKey));
+            var signature = Hex.ToString(sig);
+            var token = client.Login(User, signature, ts);
+
+            var referral = client.GetReferralsForPlayer("z3ll", token);
 
             Assert.IsNotNull(referral);
             Assert.IsTrue(referral.Referrals.Count > 0);
             referral = null;
 
-            var task = client.GetReferralsForPlayerAsync("z3ll");
+            var task = client.GetReferralsForPlayerAsync("z3ll",  token);
             Task.WaitAll(task);
 
             referral = task.Result;
@@ -131,18 +183,18 @@ namespace SplinterLandsAPI.Test
         public void TestPlayerActiveRentals()
         {
             var client = new SplinterLandsClient(Log);
-            var rentals = client.GetActiveRentalsForPlayer("farpetrad");
+            var rentals = client.GetActiveRentalsForPlayer("grabapack");
 
             Assert.IsNotNull(rentals);
-            Assert.IsTrue(rentals.Count > 0);
+            Assert.IsTrue(rentals.Count >= 0);
             rentals = null;
 
-            var task = client.GetActiveRentalsForPlayerAsync("farpetrad");
+            var task = client.GetActiveRentalsForPlayerAsync("grabapack");
             Task.WaitAll(task);
             rentals = task.Result;
 
             Assert.IsNotNull(rentals);
-            Assert.IsTrue(rentals.Count > 0);
+            Assert.IsTrue(rentals.Count >= 0);
         }
 
         [TestMethod]

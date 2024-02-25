@@ -9,7 +9,11 @@ namespace SplinterLandsAPI
 {
     public interface ILandClient
     {
-        LandWorksiteDetailsResponse GetActiveWorksite(string deed_uid);
-        Task<LandWorksiteDetailsResponse> GetActiveWorksiteAsync(string deed_uid);
+        VnexApiResponse<LandWorksiteDetails> GetActiveWorksite(string deed_uid);
+        Task<VnexApiResponse<LandWorksiteDetails>> GetActiveWorksiteAsync(string deed_uid);
+
+        VnexApiResponse<LandDeedDetails> GetDeedDetails(int deedId);
+
+
     }
 }

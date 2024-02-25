@@ -52,6 +52,14 @@ namespace SplinterLandsAPI.Test
             Assert.IsTrue(result.Length > 0);
         }
 
+        [TestMethod]
+        public void GetDeedDetails()
+        {
+            var client = new SplinterLandsClient(Log);
+            var result = client.GetDeedDetails(1);
+            Assert.IsNotNull(result);
+        }
+
 
         [TestMethod]
         public void GetWorksiteDetails()

@@ -97,16 +97,22 @@ namespace SplinterLandsAPI
             return "";
         }
 
-        public LandWorksiteDetailsResponse GetActiveWorksite(string deed_uid)
+        public VnexApiResponse<LandWorksiteDetails> GetActiveWorksite(string deed_uid)
         {
             if(string.IsNullOrEmpty(deed_uid)) throw new ArgumentNullException($"${nameof(deed_uid)} must be provided");
-            return GetClientResponse<LandWorksiteDetailsResponse>($"land/projects/deed/{deed_uid}/active", api1: false, vnext: true);
+            return GetClientResponse<VnexApiResponse<LandWorksiteDetails>>($"land/projects/deed/{deed_uid}/active", api1: false, vnext: true);
         }
 
-        public async Task<LandWorksiteDetailsResponse> GetActiveWorksiteAsync(string deed_uid)
+        public async Task<VnexApiResponse<LandWorksiteDetails>> GetActiveWorksiteAsync(string deed_uid)
         {
             if (string.IsNullOrEmpty(deed_uid)) throw new ArgumentNullException($"${nameof(deed_uid)} must be provided");
-            return await GetClientResponseAsync<LandWorksiteDetailsResponse>($"land/projects/deed/{deed_uid}/active", api1: false, vnext: true);
+            return await GetClientResponseAsync<VnexApiResponse<LandWorksiteDetails>>($"land/projects/deed/{deed_uid}/active", api1: false, vnext: true);
+        }
+
+        public VnexApiResponse<LandDeedDetails> GetDeedDetails(int deedId)
+        {
+            if (deedId <= 0) throw new ArgumentOutOfRangeException("Invalid deedId");
+            return GetClientResponse<VnexApiResponse<LandDeedDetails>>($"land/deeds/{deedId}", api1: false, vnext: true);
         }
 
         public CardSet GetCards()

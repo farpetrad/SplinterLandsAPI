@@ -44,6 +44,9 @@ jobs:
               run: dotnet build --no-restore -c Debug -p:Version=${{ steps.get-id.outputs.version }}
 
             - name: Test
+              env:
+                HIVEUSERNAME: ${{ secrets.USERNAME }}
+                KEY: ${{ secrets.KEY }}
               run: dotnet test --no-build --verbosity normal
 
            

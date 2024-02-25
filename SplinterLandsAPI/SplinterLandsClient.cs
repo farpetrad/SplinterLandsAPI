@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using RestSharp;
 using SplinterLands.DTOs.Enums;
 using SplinterLands.DTOs.Models;
@@ -58,8 +59,8 @@ namespace SplinterLandsAPI
 
             var request = new RestRequest($"players/login?name={username}&ref=&browser_id={bid}&session_id={sid}&sig={signature}&ts={ts}") { Method = Method.Get, RequestFormat = DataFormat.Json };
             var response = client.Get(request);
-            if (response != null && response.StatusCode == System.Net.HttpStatusCode.OK &&
-                    response.Content.Length > 0)
+            if (response != null && response.StatusCode == HttpStatusCode.OK &&
+                    response?.Content?.Length > 0)
             {
                 var token = DoQuickRegex("\"name\":\"" + username + "\",\"token\":\"([A-Z0-9]{10})\"", response.Content);
                 return token;
@@ -87,7 +88,7 @@ namespace SplinterLandsAPI
             var request = new RestRequest($"players/login?name={username}&ref=&browser_id={bid}&session_id={sid}&sig={signature}&ts={ts}") { Method = Method.Get, RequestFormat = DataFormat.Json };
             var response = await client.GetAsync(request);
             if (response != null && response.StatusCode == System.Net.HttpStatusCode.OK &&
-                    response.Content.Length > 0)
+                    response?.Content?.Length > 0)
             {
                 var token = DoQuickRegex("\"name\":\"" + username + "\",\"token\":\"([A-Z0-9]{10})\"", response.Content);
                 return token;
@@ -142,12 +143,12 @@ namespace SplinterLandsAPI
             }
         }
 
-        public PlayerBattles GetBattlesForPlayer(string playerName)
+        public PlayerBattles GetBattlesForPlayer(string playerName, int leaderboard, string format, string token, string username)
         {
             if(string.IsNullOrEmpty(playerName))   throw new ArgumentException("playerName must be provided", nameof(playerName));
             try
             {
-                return GetClientResponse<PlayerBattles>($"battle/history?player={playerName}", false);
+                return GetClientResponse<PlayerBattles>($"battle/history2?player={playerName}&leaderboard={leaderboard}&format={format}&token={token}&username={username}", false);
             }
             catch(Exception ex)
             {
@@ -156,12 +157,12 @@ namespace SplinterLandsAPI
             }
         }
 
-        public async Task<PlayerBattles> GetBattlesForPlayerAsync(string playerName)
+        public async Task<PlayerBattles> GetBattlesForPlayerAsync(string playerName, int leaderboard, string format, string token, string username)
         {
             if (string.IsNullOrEmpty(playerName)) throw new ArgumentException("playerName must be provided", nameof(playerName));
             try
             {
-                return await GetClientResponseAsync<PlayerBattles>($"battle/history?player={playerName}", false);
+                return await GetClientResponseAsync<PlayerBattles>($"battle/history2?player={playerName}&leaderboard={leaderboard}&format={format}&token={token}&username={username}", false);
             }
             catch (Exception ex)
             {
@@ -339,12 +340,12 @@ namespace SplinterLandsAPI
             }
         }
 
-        public ReferralCollection GetReferralsForPlayer(string playerName)
+        public ReferralCollection GetReferralsForPlayer(string playerName, string token, int page = 1, int pageSize = 3)
         {
             if (string.IsNullOrEmpty(playerName)) throw new ArgumentException("Player name must be provided", nameof(playerName));
             try
             {
-                return GetClientResponse<ReferralCollection>($"/players/referrals?username={playerName}");
+                return GetClientResponse<ReferralCollection>($"/players/referral_users?username={playerName}&token={token}&page_size={pageSize}&page={page}");
             }
             catch(Exception ex)
             {
@@ -354,12 +355,12 @@ namespace SplinterLandsAPI
             
         }
 
-        public async Task<ReferralCollection> GetReferralsForPlayerAsync(string playerName)
+        public async Task<ReferralCollection> GetReferralsForPlayerAsync(string playerName, string token, int page = 1, int pageSize = 3)
         {
             if (string.IsNullOrEmpty(playerName)) throw new ArgumentException("Player name must be provided", nameof(playerName));
             try
             {
-                return await GetClientResponseAsync<ReferralCollection>($"/players/referrals?username={playerName}");
+                return await GetClientResponseAsync<ReferralCollection>($"/players/referral_users?username={playerName}&token={token}&page_size={pageSize}&page={page}");
             }
             catch (Exception ex)
             {
@@ -396,10 +397,18 @@ namespace SplinterLandsAPI
                 var request = new RestRequest(endPoint) { Method = Method.Get, RequestFormat = DataFormat.Json };
                 var response = client.Get(request);
 
-                if (response != null && response.StatusCode == System.Net.HttpStatusCode.OK &&
-                    response.Content.Length > 0)
+                if (response != null && response.StatusCode == System.Net.HttpStatusCode.OK && response?.Content?.Length > 0)
                 {
-                    return JsonConvert.DeserializeObject<T>(response.Content) ?? new T();
+                    var settings = new JsonSerializerSettings
+                    {
+                        NullValueHandling = NullValueHandling.Ignore,
+                        MissingMemberHandling = MissingMemberHandling.Ignore,
+                        Error = (object sender, Newtonsoft.Json.Serialization.ErrorEventArgs errorArgs) =>
+                        {
+                            int stop = 0;
+                        }
+                    };
+                    return JsonConvert.DeserializeObject<T>(response.Content, settings) ?? new T();
 
                 }
                 throw new Exception($"GetClientResponse - Invalid response {response?.StatusCode}");

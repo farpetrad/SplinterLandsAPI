@@ -7,8 +7,8 @@ namespace SplinterLandsAPI
     {
         PlayerQuest GetPlayersCurrentQuest(string playerName);
         Task<PlayerQuest> GetPlayerCurrentQuestAsync(string playerName);
-        ReferralCollection GetReferralsForPlayer(string playerName);
-        Task<ReferralCollection> GetReferralsForPlayerAsync(string playerName);
+        ReferralCollection GetReferralsForPlayer(string playerName, string token, int page, int pageSize);
+        Task<ReferralCollection> GetReferralsForPlayerAsync(string playerName, string token, int page, int pageSize);
         EditionPackPurchases GetPackPurchaesForPlayerByEdition(string playerName, SetEditionEnum edition);
         Task<EditionPackPurchases> GetPackPurchaesForPlayerByEditionAsync(string playerName, SetEditionEnum edition);
         List<RentalCard> GetActiveRentalsForPlayer(string playerName);

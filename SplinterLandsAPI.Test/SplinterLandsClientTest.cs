@@ -23,6 +23,15 @@ namespace SplinterLandsAPI.Test
 
             PrivatePostingKey = Configuration["KEY"] ?? string.Empty;
             User = Configuration["HIVEUSERNAME"] ?? string.Empty;
+
+            if(PrivatePostingKey == string.Empty)
+            {
+                PrivatePostingKey = Environment.GetEnvironmentVariable("KEY") ?? string.Empty;
+            }
+            if(User == string.Empty)
+            {
+                User = Environment.GetEnvironmentVariable("HIVEUSERNAME") ?? string.Empty;
+            }
         }
         private ILogger Log => new Mock<ILogger>().Object;
         private readonly string User;
@@ -31,6 +40,8 @@ namespace SplinterLandsAPI.Test
         [TestMethod]
         public void LoginTest()
         {
+            Assert.IsTrue(User != string.Empty);
+            Assert.IsTrue(PrivatePostingKey != string.Empty);
             var client = new SplinterLandsClient(Log);
             var ts = new DateTimeOffset(DateTime.Now).ToUnixTimeMilliseconds().ToString();
             var hash = Sha256Manager.GetHash(Encoding.ASCII.GetBytes(User + ts));
@@ -74,6 +85,8 @@ namespace SplinterLandsAPI.Test
         [TestMethod]
         public void TestGetPlayerBattles()
         {
+            Assert.IsTrue(User != string.Empty);
+            Assert.IsTrue(PrivatePostingKey != string.Empty);
             var client = new SplinterLandsClient(Log);
             var ts = new DateTimeOffset(DateTime.Now).ToUnixTimeMilliseconds().ToString();
             var hash = Sha256Manager.GetHash(Encoding.ASCII.GetBytes(User + ts));
@@ -140,6 +153,8 @@ namespace SplinterLandsAPI.Test
         [TestMethod]
         public void TestPlayerReferrals()
         {
+            Assert.IsTrue(User != string.Empty);
+            Assert.IsTrue(PrivatePostingKey != string.Empty);
             var client = new SplinterLandsClient(Log);
             var ts = new DateTimeOffset(DateTime.Now).ToUnixTimeMilliseconds().ToString();
             var hash = Sha256Manager.GetHash(Encoding.ASCII.GetBytes(User + ts));

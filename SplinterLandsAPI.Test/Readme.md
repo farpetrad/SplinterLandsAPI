@@ -8,3 +8,4 @@ Next add two secrets, one for the user `HIVEUSERNAME` and one for your private p
 `dotnet user-secrets set "HIVEUSERNAME" "YOUR_USER_NAME_HERE"`
 `dotnet user-secrets set "KEY" "YOUR_PRIVATE_POSTING_KEY_HERE"`
 
+See more info at https://learn.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-8.0&tabs=windows

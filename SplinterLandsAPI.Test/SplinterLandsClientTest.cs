@@ -40,6 +40,8 @@ namespace SplinterLandsAPI.Test
         [TestMethod]
         public void LoginTest()
         {
+            Assert.IsTrue(User != string.Empty);
+            Assert.IsTrue(PrivatePostingKey != string.Empty);
             var client = new SplinterLandsClient(Log);
             var ts = new DateTimeOffset(DateTime.Now).ToUnixTimeMilliseconds().ToString();
             var hash = Sha256Manager.GetHash(Encoding.ASCII.GetBytes(User + ts));
@@ -83,6 +85,8 @@ namespace SplinterLandsAPI.Test
         [TestMethod]
         public void TestGetPlayerBattles()
         {
+            Assert.IsTrue(User != string.Empty);
+            Assert.IsTrue(PrivatePostingKey != string.Empty);
             var client = new SplinterLandsClient(Log);
             var ts = new DateTimeOffset(DateTime.Now).ToUnixTimeMilliseconds().ToString();
             var hash = Sha256Manager.GetHash(Encoding.ASCII.GetBytes(User + ts));
@@ -149,6 +153,8 @@ namespace SplinterLandsAPI.Test
         [TestMethod]
         public void TestPlayerReferrals()
         {
+            Assert.IsTrue(User != string.Empty);
+            Assert.IsTrue(PrivatePostingKey != string.Empty);
             var client = new SplinterLandsClient(Log);
             var ts = new DateTimeOffset(DateTime.Now).ToUnixTimeMilliseconds().ToString();
             var hash = Sha256Manager.GetHash(Encoding.ASCII.GetBytes(User + ts));

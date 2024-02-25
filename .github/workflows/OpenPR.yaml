@@ -14,7 +14,7 @@ jobs:
             - name: Setup .NET
               uses: actions/setup-dotnet@v1
               with:
-                dotnet-version: 6.0.x
+                dotnet-version: 8.0.x
 
             - name: Restore dependencies
               run: dotnet restore
@@ -44,6 +44,9 @@ jobs:
               run: dotnet build --no-restore -c Debug -p:Version=${{ steps.get-id.outputs.version }}
 
             - name: Test
-              run: dotnet test --no-build --verbosity normal
+              env:
+                HIVEUSERNAME: ${{ secrets.USERNAME }}
+                KEY: ${{ secrets.KEY }}
+              run: dotnet test --no-build --verbosity normal -c Release
 
            

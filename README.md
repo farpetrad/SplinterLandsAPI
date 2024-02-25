@@ -31,5 +31,11 @@ The client is defined as implementing the ISplinterLandsClient interface which i
 * GetActivelyRentaledCardsForPlayer - returns a list of actively rented cards for a player
 * GetTokenBalancesForPlayer - returns a list of all tokens held by the player and their balances
 
+## Land
+
+* GetActiveWorksite - returns active worksite information for a plot by deed_uid
+* GetActiveWorksiteAsync -
+* GetDeedDetails - get the details about a deed by id
+
 # Known Issues
 - If you hit any of these API's in quick sucession you will get rate limited'

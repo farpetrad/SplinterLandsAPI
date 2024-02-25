@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace SplinterLands.DTOs.Models
 {
-    public class LandWorksiteDetailsResponse
+    public class VnexApiResponse<T>
     {
         public string status { get; set; } = string.Empty;
-        public LandWorksiteDetails data { get; set; } = null;
+        public T? data { get; set; } = default(T?);
     }
 }

@@ -47,6 +47,6 @@ jobs:
               env:
                 HIVEUSERNAME: ${{ secrets.USERNAME }}
                 KEY: ${{ secrets.KEY }}
-              run: dotnet test --no-build --verbosity normal --configuration Release
+              run: dotnet test --no-build --verbosity normal -c Release
 
            

@@ -53,6 +53,16 @@ namespace SplinterLandsAPI.Test
         }
 
         [TestMethod]
+        public void GetDeeedRewardActions()
+        {
+            var client = new SplinterLandsClient(Log);
+            var result = client.GetRewardActionsForDeed("I-302-8f7c5f8449b785");
+            Assert.IsNotNull(result);
+            Assert.IsNotNull(result.data);
+            Assert.IsTrue(result.data.Length > 0);
+        }
+
+        [TestMethod]
         public void GetDeedDetails()
         {
             var client = new SplinterLandsClient(Log);

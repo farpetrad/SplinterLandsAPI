@@ -14,6 +14,6 @@ namespace SplinterLandsAPI
 
         VnexApiResponse<LandDeedDetails> GetDeedDetails(int deedId);
 
-
+        VnexApiResponse<LandProjectRewardAction[]> GetRewardActionsForDeed(string deed_uid, int offset = 0, int limit = 10);
     }
 }

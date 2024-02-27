@@ -115,6 +115,24 @@ namespace SplinterLandsAPI
             return GetClientResponse<VnexApiResponse<LandDeedDetails>>($"land/deeds/{deedId}", api1: false, vnext: true);
         }
 
+        public async Task<VnexApiResponse<LandDeedDetails>> GetDeedDetailsAsync(int deedId)
+        {
+            if (deedId <= 0) throw new ArgumentOutOfRangeException("Invalid deedId");
+            return await GetClientResponseAsync<VnexApiResponse<LandDeedDetails>>($"land/deeds/{deedId}", api1: false, vnext: true);
+        }
+
+        public VnexApiResponse<LandProjectRewardAction[]> GetRewardActionsForDeed(string deed_uid, int offset = 0, int limit = 10)
+        {
+            if (string.IsNullOrEmpty(deed_uid)) throw new ArgumentNullException($"${nameof(deed_uid)} must be provided");
+            return GetClientResponse<VnexApiResponse<LandProjectRewardAction[]>>($"land/resources/rewardactions/{deed_uid}?limit={limit}&offset={offset}", api1: false, vnext: true);
+        }
+
+        public async Task<VnexApiResponse<LandProjectRewardAction[]>> GetRewardActionsForDeedAsync(string deed_uid, int offset = 0, int limit = 10)
+        {
+            if (string.IsNullOrEmpty(deed_uid)) throw new ArgumentNullException($"${nameof(deed_uid)} must be provided");
+            return await GetClientResponseAsync<VnexApiResponse<LandProjectRewardAction[]>>($"land/resources/rewardactions/{deed_uid}?limit={limit}&offset={offset}", api1: false, vnext: true);
+        }
+
         public CardSet GetCards()
         {
             try

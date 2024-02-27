@@ -4,7 +4,7 @@
 
 # SplinterLandsAPI
 
-This is just a demonstration of using the Splinterlands API through .NET 6.0 C#.  
+This is just a demonstration of using the Splinterlands API through .NET 8.0 C#.  
 These API's are not documented and are subject to change at any time.
 
 # Client

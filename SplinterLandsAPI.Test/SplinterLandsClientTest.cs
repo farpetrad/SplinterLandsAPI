@@ -53,6 +53,17 @@ namespace SplinterLandsAPI.Test
         }
 
         [TestMethod]
+        public void GetDeedStakeableGroupedCards()
+        {
+            var client = new SplinterLandsClient(Log);
+            var result = client.GetGroupedDeedStakeableCards(StakeTypesEnum.Worker, "I-296-a840be819c5962", "farpetrad", 0, 100, GroupedDeedStakeableCardsOrderByEnum.name, GroupedDeedStakeableCardsOrderByAscEnum.desc);
+            Assert.IsNotNull(result);
+            Assert.IsNotNull(result.data);
+            Assert.IsNotNull(result.data.cards);
+            Assert.IsTrue(result.data.cards.Length > 0);
+        }
+
+        [TestMethod]
         public void GetDeeedRewardActions()
         {
             var client = new SplinterLandsClient(Log);

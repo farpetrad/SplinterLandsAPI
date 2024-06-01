@@ -2,7 +2,7 @@
 
 namespace SplinterLandsAPI
 {
-    public interface ISplinterLandsClient : IBattlesClient, ICardsClient, IPlayerClient, ILandClient, ILogin
+    public interface ISplinterLandsClient : IBattlesClient, ICardsClient, IPlayerClient, ILandClient, ILogin, ILiquidityClient
     {
         
     }

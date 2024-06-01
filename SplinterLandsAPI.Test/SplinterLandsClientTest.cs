@@ -276,5 +276,75 @@ namespace SplinterLandsAPI.Test
             Assert.IsNotNull(balances);
             Assert.IsTrue(balances.Count > 0);
         }
+
+        [TestMethod]
+        public void TestGetLiquidityPools()
+        {
+            var client = new SplinterLandsClient(Log);
+
+            var pools = client.GetLiquidityPools();
+            Assert.IsNotNull(pools);
+            Assert.IsTrue(pools.data.Length > 0);
+
+            var task = client.GetLiquidityPoolsAsync();
+            Task.WaitAll(task);
+
+            var taskPools = task.Result.data;
+            Assert.IsNotNull(taskPools);
+            Assert.IsTrue(taskPools.Length > 0);
+        }
+
+        [TestMethod]
+        public void TestGetLiqidityPoolResources()
+        {
+            var player = "farpetrad";
+            var resource = "GRAIN";
+            var client = new SplinterLandsClient(Log);
+
+            var resources = client.GetLiquidityRegionResources(player, resource);
+            Assert.IsNotNull(resources);
+            Assert.IsTrue((resources?.data?.Length ?? 0) > 0);
+
+            var task = client.GetLiquidityRegionResourcesAsync(player, resource);
+            Task.WaitAll(task);
+
+            var taskResources = task.Result.data;
+            Assert.IsNotNull(taskResources);
+            Assert.IsTrue(taskResources.Length > 0);
+
+        }
+
+        [TestMethod]
+        public void TestGetPlayerLiquidityHoldings()
+        {
+            var player = "farpetrad";
+            var resource = "GRAIN";
+            var client = new SplinterLandsClient(Log);
+
+            var holdings = client.GetPlayerLiquidityHoldings(player, resource);
+            Assert.IsNotNull(holdings);
+            Assert.IsTrue((holdings?.data?.Length ?? 0) > 0);
+
+            var task = client.GetPlayerLiquidityHoldingsAsync(player, resource);
+            Task.WaitAll(task);
+            var taskResources = task.Result.data;
+            Assert.IsNotNull(taskResources);
+            Assert.IsTrue(taskResources.Length > 0);
+        }
+
+        [TestMethod]
+        public void TestGetLiquidityPoolById()
+        {
+            uint poolId = 1;
+            var client = new SplinterLandsClient(Log);
+            var pool = client.GetLiquidityPoolById(poolId);
+            Assert.IsNotNull(pool);
+            Assert.IsNotNull(pool.data);
+
+            var task = client.GetLiquidityPoolByIdAsync(poolId);
+            Task.WaitAll(task);
+            var taskResources = task.Result.data;
+            Assert.IsNotNull(taskResources);
+        }
     }
 }

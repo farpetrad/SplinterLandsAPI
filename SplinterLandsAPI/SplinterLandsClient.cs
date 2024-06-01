@@ -135,6 +135,44 @@ namespace SplinterLandsAPI
             return await GetClientResponseAsync<VnexApiResponse<LandProjectRewardAction[]>>($"land/resources/rewardactions/{deed_uid}?limit={limit}&offset={offset}", api1: false, vnext: true);
         }
 
+
+        public VnexApiResponse<LiquidityPool[]> GetLiquidityPools()
+        {
+            return GetClientResponse<VnexApiResponse<LiquidityPool[]>>("land/liquidity/pools", api1: false, vnext: true);
+        }
+
+        public async Task<VnexApiResponse<LiquidityPool[]>> GetLiquidityPoolsAsync()
+        {
+            return await GetClientResponseAsync<VnexApiResponse<LiquidityPool[]>>("land/liquidity/pools", api1: false, vnext: true); ;
+        }
+
+        public VnexApiResponse<LiquidityPool> GetLiquidityPoolById(uint id)
+        {
+            return GetClientResponse<VnexApiResponse<LiquidityPool>>($"land/liquidity/pools/{id}", api1: false, vnext: true);
+        }
+        public async Task<VnexApiResponse<LiquidityPool>> GetLiquidityPoolByIdAsync(uint id)
+        {
+            return await GetClientResponseAsync<VnexApiResponse<LiquidityPool>>($"land/liquidity/pools/{id}", api1: false, vnext: true); ;
+        }
+
+        public VnexApiResponse<LiquidityRegionResource[]> GetLiquidityRegionResources(string player, string resource)
+        {
+            return GetClientResponse<VnexApiResponse<LiquidityRegionResource[]>>($"land/liquidity/resources/{player}/{resource}", api1: false, vnext: true);
+        }
+        public async Task<VnexApiResponse<LiquidityRegionResource[]>> GetLiquidityRegionResourcesAsync(string player, string resource)
+        {
+            return await GetClientResponseAsync<VnexApiResponse<LiquidityRegionResource[]>>($"land/liquidity/resources/{player}/{resource}", api1: false, vnext: true);
+        }
+
+        public VnexApiResponse<PlayerLiquidityPoolHoldings[]> GetPlayerLiquidityHoldings(string player, string resource)
+        {
+            return GetClientResponse<VnexApiResponse<PlayerLiquidityPoolHoldings[]>>($"land/liquidity/pools/{player}/{resource}", api1: false, vnext: true);
+        }
+        public async Task<VnexApiResponse<PlayerLiquidityPoolHoldings[]>> GetPlayerLiquidityHoldingsAsync(string player, string resource)
+        {
+            return await GetClientResponseAsync<VnexApiResponse<PlayerLiquidityPoolHoldings[]>>($"land/liquidity/pools/{player}/{resource}", api1: false, vnext: true);
+        }
+
         public VnexApiResponse<GroupedDeedStakeableCards> GetGroupedDeedStakeableCards(StakeTypesEnum stakeTypeUid, string deedUid, string player, int offset, int limit,
                                                                                 GroupedDeedStakeableCardsOrderByEnum orderBy, GroupedDeedStakeableCardsOrderByAscEnum orderbyAsc,
                                                                                 uint? card_detail_id = null, uint? bcx = null, bool? gold = null, uint? edition = null, double? land_pp_at_or_gt = null, double? land_pp_at_or_lt = null,

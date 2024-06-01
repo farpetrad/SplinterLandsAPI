@@ -152,6 +152,15 @@ namespace SplinterLandsAPI
             return await GetClientResponseAsync<VnexApiResponse<LiquidityRegionResource[]>>($"land/liquidity/resources/{player}/{resource}", api1: false, vnext: true);
         }
 
+        public VnexApiResponse<PlayerLiquidityPoolHoldings[]> GetPlayerLiquidityHoldings(string player, string resource)
+        {
+            return GetClientResponse<VnexApiResponse<PlayerLiquidityPoolHoldings[]>>($"land/liquidity/pools/{player}/{resource}", api1: false, vnext: true);
+        }
+        public async Task<VnexApiResponse<PlayerLiquidityPoolHoldings[]>> GetPlayerLiquidityHoldingsAsync(string player, string resource)
+        {
+            return await GetClientResponseAsync<VnexApiResponse<PlayerLiquidityPoolHoldings[]>>($"land/liquidity/pools/{player}/{resource}", api1: false, vnext: true); ;
+        }
+
         public CardSet GetCards()
         {
             try

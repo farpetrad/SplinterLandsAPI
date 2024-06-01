@@ -292,7 +292,7 @@ namespace SplinterLandsAPI.Test
 
             var resources = client.GetLiquidityRegionResources(player, resource);
             Assert.IsNotNull(resources);
-            Assert.IsTrue(resources?.data?.Length > 0);
+            Assert.IsTrue((resources?.data?.Length ?? 0) > 0);
 
             var task = client.GetLiquidityRegionResourcesAsync(player, resource);
             Task.WaitAll(task);
@@ -301,6 +301,24 @@ namespace SplinterLandsAPI.Test
             Assert.IsNotNull(taskResources);
             Assert.IsTrue(taskResources.Length > 0);
 
+        }
+
+        [TestMethod]
+        public void TestGetPlayerLiquidityHoldings()
+        {
+            var player = "farpetrad";
+            var resource = "GRAIN";
+            var client = new SplinterLandsClient(Log);
+
+            var holdings = client.GetPlayerLiquidityHoldings(player, resource);
+            Assert.IsNotNull(holdings);
+            Assert.IsTrue((holdings?.data?.Length ?? 0) > 0);
+
+            var task = client.GetPlayerLiquidityHoldingsAsync(player, resource);
+            Task.WaitAll(task);
+            var taskResources = task.Result.data;
+            Assert.IsNotNull(taskResources);
+            Assert.IsTrue(taskResources.Length > 0);
         }
     }
 }

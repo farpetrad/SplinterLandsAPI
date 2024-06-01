@@ -265,5 +265,22 @@ namespace SplinterLandsAPI.Test
             Assert.IsNotNull(balances);
             Assert.IsTrue(balances.Count > 0);
         }
+
+        [TestMethod]
+        public void TestGetLiquidityPools()
+        {
+            var client = new SplinterLandsClient(Log);
+
+            var pools = client.GetLiquidityPools();
+            Assert.IsNotNull(pools);
+            Assert.IsTrue(pools.data.Length > 0);
+
+            var task = client.GetLiquidityPoolsAsync();
+            Task.WaitAll(task);
+
+            var taskPools = task.Result.data;
+            Assert.IsNotNull(taskPools);
+            Assert.IsTrue(taskPools.Length > 0);
+        }
     }
 }

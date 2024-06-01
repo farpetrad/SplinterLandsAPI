@@ -3,8 +3,10 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using RestSharp;
 using SplinterLands.DTOs.Enums;
+using SplinterLands.DTOs.Extensions;
 using SplinterLands.DTOs.Models;
 using System.Net;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace SplinterLandsAPI
@@ -133,6 +135,7 @@ namespace SplinterLandsAPI
             return await GetClientResponseAsync<VnexApiResponse<LandProjectRewardAction[]>>($"land/resources/rewardactions/{deed_uid}?limit={limit}&offset={offset}", api1: false, vnext: true);
         }
 
+
         public VnexApiResponse<LiquidityPool[]> GetLiquidityPools()
         {
             return GetClientResponse<VnexApiResponse<LiquidityPool[]>>("land/liquidity/pools", api1: false, vnext: true);
@@ -167,7 +170,47 @@ namespace SplinterLandsAPI
         }
         public async Task<VnexApiResponse<PlayerLiquidityPoolHoldings[]>> GetPlayerLiquidityHoldingsAsync(string player, string resource)
         {
-            return await GetClientResponseAsync<VnexApiResponse<PlayerLiquidityPoolHoldings[]>>($"land/liquidity/pools/{player}/{resource}", api1: false, vnext: true); ;
+            return await GetClientResponseAsync<VnexApiResponse<PlayerLiquidityPoolHoldings[]>>($"land/liquidity/pools/{player}/{resource}", api1: false, vnext: true);
+        }
+
+        public VnexApiResponse<GroupedDeedStakeableCards> GetGroupedDeedStakeableCards(StakeTypesEnum stakeTypeUid, string deedUid, string player, int offset, int limit,
+                                                                                GroupedDeedStakeableCardsOrderByEnum orderBy, GroupedDeedStakeableCardsOrderByAscEnum orderbyAsc,
+                                                                                uint? card_detail_id = null, uint? bcx = null, bool? gold = null, uint? edition = null, double? land_pp_at_or_gt = null, double? land_pp_at_or_lt = null,
+                                                                                double? land_dec_stake_needed_at_or_gt = null, double? land_dec_stake_needed_at_or_lt = null, string? name = null, uint? tier = null)
+        {
+            var urlBuilder = new StringBuilder($"land/stake/cards/{stakeTypeUid.GetEnumDescription()}/grouped?deedUid={deedUid}&player={player}&offset={offset}&limit={limit}&order_by={(int)orderBy}&order_by_asc={(int)orderbyAsc}");
+            if (card_detail_id != null) urlBuilder.Append($"&card_detail_id={card_detail_id}");
+            if (bcx != null) urlBuilder.Append($"&bcx={bcx}");
+            if (gold != null) urlBuilder.Append($"&gold={gold}");
+            if (edition != null) urlBuilder.Append($"&edition={edition}");
+            if (land_pp_at_or_gt != null) urlBuilder.Append($"&land_pp_at_or_gt={land_pp_at_or_gt}");
+            if (land_pp_at_or_lt != null) urlBuilder.Append($"&land_pp_at_or_lt={land_pp_at_or_lt}");
+            if (land_dec_stake_needed_at_or_gt != null) urlBuilder.Append($"&land_dec_stake_needed_at_or_gt={land_dec_stake_needed_at_or_gt}");
+            if (land_dec_stake_needed_at_or_lt != null) urlBuilder.Append($"&land_dec_stake_needed_at_or_lt={land_dec_stake_needed_at_or_lt}");
+            if (name != null) urlBuilder.Append($"&name={name}");
+            if (tier != null) urlBuilder.Append($"&tier={tier}");
+            var url = urlBuilder.ToString();
+            return GetClientResponse<VnexApiResponse<GroupedDeedStakeableCards>>(url, api1: false, vnext: true);
+        }
+
+        public async Task<VnexApiResponse<GroupedDeedStakeableCards>> GetGroupedDeedStakeableCardsAsync(StakeTypesEnum stakeTypeUid, string deedUid, string player, int offset, int limit,
+                                                                                GroupedDeedStakeableCardsOrderByEnum orderBy, GroupedDeedStakeableCardsOrderByAscEnum orderbyAsc,
+                                                                                uint? card_detail_id = null, uint? bcx = null, bool? gold = null, uint? edition = null, double? land_pp_at_or_gt = null, double? land_pp_at_or_lt = null,
+                                                                                double? land_dec_stake_needed_at_or_gt = null, double? land_dec_stake_needed_at_or_lt = null, string? name = null, uint? tier = null)
+        {
+            var urlBuilder = new StringBuilder($"land/stake/cards/{stakeTypeUid.GetEnumDescription()}/grouped?deedUid={deedUid}&player={player}&offset={offset}&limit={limit}&order_by={(int)orderBy}&order_by_asc={(int)orderbyAsc}");
+            if (card_detail_id != null) urlBuilder.Append($"&card_detail_id={card_detail_id}");
+            if (bcx != null) urlBuilder.Append($"&bcx={bcx}");
+            if (gold != null) urlBuilder.Append($"&gold={gold}");
+            if (edition != null) urlBuilder.Append($"&edition={edition}");
+            if (land_pp_at_or_gt != null) urlBuilder.Append($"&land_pp_at_or_gt={land_pp_at_or_gt}");
+            if (land_pp_at_or_lt != null) urlBuilder.Append($"&land_pp_at_or_lt={land_pp_at_or_lt}");
+            if (land_dec_stake_needed_at_or_gt != null) urlBuilder.Append($"&land_dec_stake_needed_at_or_gt={land_dec_stake_needed_at_or_gt}");
+            if (land_dec_stake_needed_at_or_lt != null) urlBuilder.Append($"&land_dec_stake_needed_at_or_lt={land_dec_stake_needed_at_or_lt}");
+            if (name != null) urlBuilder.Append($"&name={name}");
+            if (tier != null) urlBuilder.Append($"&tier={tier}");
+            var url = urlBuilder.ToString();
+            return await GetClientResponseAsync<VnexApiResponse<GroupedDeedStakeableCards>>(url, api1: false, vnext: true);
         }
 
         public CardSet GetCards()
@@ -464,10 +507,6 @@ namespace SplinterLandsAPI
                     {
                         NullValueHandling = NullValueHandling.Ignore,
                         MissingMemberHandling = MissingMemberHandling.Ignore,
-                        Error = (object sender, Newtonsoft.Json.Serialization.ErrorEventArgs errorArgs) =>
-                        {
-                            int stop = 0;
-                        }
                     };
                     return JsonConvert.DeserializeObject<T>(response.Content, settings) ?? new T();
 
@@ -507,7 +546,7 @@ namespace SplinterLandsAPI
             var response = await client.ExecuteAsync(request);
 
             if (response != null && response.StatusCode == System.Net.HttpStatusCode.OK &&
-                    response.Content.Length > 0)
+                    response?.Content?.Length > 0)
             {
                 return JsonConvert.DeserializeObject<T>(response.Content) ?? new T();
 

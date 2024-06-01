@@ -37,5 +37,15 @@ The client is defined as implementing the ISplinterLandsClient interface which i
 * GetActiveWorksiteAsync -
 * GetDeedDetails - get the details about a deed by id
 
+## Liquidity Pools
+* GetLiquidityPools - returns list of all available liquidity pools
+* GetLiquidityPoolsAsync - returns list of all available liquidity pools async
+* GetLiquidityRegionResources - gets regions player holds resources in
+* GetLiquidityRegionResourcesAsync - gets regions player holds resources in async
+* GetPlayerLiquidityHoldings - returns list of liquidity by player and resource
+* GetPlayerLiquidityHoldingsAsync - returns list of liquidity by player and resource async
+* GetLiquidityPoolById - returns liquidity pool by id
+* GetLiquidityPoolByIdAsync - returns liquidity pool by id async
+
 # Known Issues
 - If you hit any of these API's in quick sucession you will get rate limited'

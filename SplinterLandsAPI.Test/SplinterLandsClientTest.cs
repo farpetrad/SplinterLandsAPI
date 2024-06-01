@@ -282,5 +282,25 @@ namespace SplinterLandsAPI.Test
             Assert.IsNotNull(taskPools);
             Assert.IsTrue(taskPools.Length > 0);
         }
+
+        [TestMethod]
+        public void TestGetLiqidityPoolResources()
+        {
+            var player = "farpetrad";
+            var resource = "GRAIN";
+            var client = new SplinterLandsClient(Log);
+
+            var resources = client.GetLiquidityRegionResources(player, resource);
+            Assert.IsNotNull(resources);
+            Assert.IsTrue(resources?.data?.Length > 0);
+
+            var task = client.GetLiquidityRegionResourcesAsync(player, resource);
+            Task.WaitAll(task);
+
+            var taskResources = task.Result.data;
+            Assert.IsNotNull(taskResources);
+            Assert.IsTrue(taskResources.Length > 0);
+
+        }
     }
 }

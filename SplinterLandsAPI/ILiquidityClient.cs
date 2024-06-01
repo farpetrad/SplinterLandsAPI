@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SplinterLands.DTOs.Models;
+﻿using SplinterLands.DTOs.Models;
 
 namespace SplinterLandsAPI
 {
@@ -11,5 +6,7 @@ namespace SplinterLandsAPI
     {
         VnexApiResponse<LiquidityPool[]> GetLiquidityPools();
         Task<VnexApiResponse<LiquidityPool[]>> GetLiquidityPoolsAsync();
+        VnexApiResponse<LiquidityRegionResource[]> GetLiquidityRegionResources(string player, string resource);
+        Task<VnexApiResponse<LiquidityRegionResource[]>> GetLiquidityRegionResourcesAsync(string player, string resource);
     }
 }

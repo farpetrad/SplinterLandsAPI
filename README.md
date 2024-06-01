@@ -40,6 +40,8 @@ The client is defined as implementing the ISplinterLandsClient interface which i
 ## Liquidity Pools
 * GetLiquidityPools - returns list of all available liquidity pools
 * GetLiquidityPoolsAsync - returns list of all available liquidity pools async
+* GetLiquidityRegionResources - gets regions player holds resources in
+* GetLiquidityRegionResourcesAsync - gets regions player holds resources in async
 
 # Known Issues
 - If you hit any of these API's in quick sucession you will get rate limited'

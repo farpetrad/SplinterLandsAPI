@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 using RestSharp;
 using SplinterLands.DTOs.Enums;
@@ -481,6 +482,26 @@ namespace SplinterLandsAPI
                 _logger.LogError(ex, "An error occured while calling GetReferralsForPlayerAsync");
                 return new ReferralCollection();
             }
+        }
+
+        public List<TokenHistoryRecord> GetTokenHistory(string player, string tokenType, string token, int limit = 50, string from = "&last_update_date=")
+        {
+            return GetClientResponse<List<TokenHistoryRecord>>($"players/balance_history?username={player}&token_type={tokenType}&from={from}&limit={limit}&token={token}", false, false);
+        }
+
+        public async Task<List<TokenHistoryRecord>> GetTokenHistoryAsync(string player, string tokenType, string token, int limit = 50, string from = "&last_update_date=")
+        {
+            return await GetClientResponseAsync<List<TokenHistoryRecord>>($"players/balance_history?username={player}&token_type={tokenType}&from={from}&limit={limit}&token={token}", false, false);
+        }
+
+        public List<ExchangeHistoryRecord> GetExchangeHistory(string player, string tokenType, string token, uint limit = 50, uint offset = 0)
+        {
+            return GetClientResponse<List<ExchangeHistoryRecord>>($"players/exchange_history?username={player}&token_type={tokenType}&limit={limit}&offset={offset}&token={token}", false, false);
+        }
+
+        public async Task<List<ExchangeHistoryRecord>> GetExchangeHistoryAsync(string player, string tokenType, string token, uint limit = 50, uint offset = 0)
+        {
+            return await GetClientResponseAsync<List<ExchangeHistoryRecord>>($"players/exchange_history?username={player}&token_type={tokenType}&limit={limit}&offset={offset}&token={token}", false, false);
         }
 
         private T GetClientResponse<T>(string endPoint, bool api1 = true, bool vnext = false) where T: new()

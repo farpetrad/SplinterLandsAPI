@@ -12,5 +12,7 @@ namespace SplinterLandsAPI
         Task<VnexApiResponse<PlayerLiquidityPoolHoldings[]>> GetPlayerLiquidityHoldingsAsync(string player, string resource);
         VnexApiResponse<LiquidityPool> GetLiquidityPoolById(uint id);
         Task<VnexApiResponse<LiquidityPool>> GetLiquidityPoolByIdAsync(uint id);
+        VnexApiResponse<LiquidityReward[]> GetLiquidityRewards();
+        Task<VnexApiResponse<LiquidityReward[]>> GetLiquidityRewardsAsync();
     }
 }

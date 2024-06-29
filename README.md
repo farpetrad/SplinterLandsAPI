@@ -46,6 +46,14 @@ The client is defined as implementing the ISplinterLandsClient interface which i
 * GetPlayerLiquidityHoldingsAsync - returns list of liquidity by player and resource async
 * GetLiquidityPoolById - returns liquidity pool by id
 * GetLiquidityPoolByIdAsync - returns liquidity pool by id async
+* GetLiquidityRewards - returns a collection of all liquidity rewards earned
+* GetLiquidityRewardsAsync - returns a collection of all liquidity rewards earned async
+
+## Token Activity
+* GetTokenHistory - returns history of tokens for player
+* GetTokenHistoryAsync - returns history of tokens for player async
+* GetExchangeHistory - returns exchange history of tokens for player
+* GetExchangeHistoryAsync - returns exchange history of tokens for player async
 
 # Known Issues
 - If you hit any of these API's in quick sucession you will get rate limited'

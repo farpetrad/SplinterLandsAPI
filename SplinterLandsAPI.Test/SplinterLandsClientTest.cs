@@ -122,7 +122,7 @@ namespace SplinterLandsAPI.Test
             var sig = Secp256K1Manager.SignCompressedCompact(hash, CBase58.DecodePrivateWif(PrivatePostingKey));
             var signature = Hex.ToString(sig);
             var token = client.Login(User, signature, ts);
-
+            // You must change the user name here to match your environment
             var battles = client.GetBattlesForPlayer("ahsoka", 2, "WILD", token, "ahsoka");
 
             Assert.IsNotNull(battles);
@@ -130,6 +130,7 @@ namespace SplinterLandsAPI.Test
             Assert.IsTrue(battles.Battles.Count >= 0);
 
             battles = null;
+            // You must change the user name here to match your environment
             var task = client.GetBattlesForPlayerAsync("ahsoka", 2, "WILD", token, "ahsoka");
             Task.WaitAll(task);
             battles = task.Result;
@@ -359,6 +360,36 @@ namespace SplinterLandsAPI.Test
             Task.WaitAll(task);
             var taskRewards = task.Result.data;
             Assert.IsNotNull(taskRewards);
+        }
+
+        [TestMethod]
+        public void TestGetTokenHistory()
+        {
+            Assert.IsTrue(User != string.Empty);
+            Assert.IsTrue(PrivatePostingKey != string.Empty);
+            var client = new SplinterLandsClient(Log);
+            var ts = new DateTimeOffset(DateTime.Now).ToUnixTimeMilliseconds().ToString();
+            var hash = Sha256Manager.GetHash(Encoding.ASCII.GetBytes(User + ts));
+            var sig = Secp256K1Manager.SignCompressedCompact(hash, CBase58.DecodePrivateWif(PrivatePostingKey));
+            var signature = Hex.ToString(sig);
+            var token = client.Login(User, signature, ts);
+            var decHistory = client.GetTokenHistory(User, "MERITS", token);
+            Assert.IsNotNull(decHistory);
+        }
+
+        [TestMethod]
+        public void TestGetExchangeHistory()
+        {
+            Assert.IsTrue(User != string.Empty);
+            Assert.IsTrue(PrivatePostingKey != string.Empty);
+            var client = new SplinterLandsClient(Log);
+            var ts = new DateTimeOffset(DateTime.Now).ToUnixTimeMilliseconds().ToString();
+            var hash = Sha256Manager.GetHash(Encoding.ASCII.GetBytes(User + ts));
+            var sig = Secp256K1Manager.SignCompressedCompact(hash, CBase58.DecodePrivateWif(PrivatePostingKey));
+            var signature = Hex.ToString(sig);
+            var token = client.Login(User, signature, ts);
+            var history = client.GetExchangeHistory(User, "DEC", token);
+            Assert.IsNotNull(history);
         }
     }
 }

@@ -346,5 +346,19 @@ namespace SplinterLandsAPI.Test
             var taskResources = task.Result.data;
             Assert.IsNotNull(taskResources);
         }
+
+        [TestMethod]
+        public void TestGetLiquidityPoolRewards()
+        {
+            var client = new SplinterLandsClient(Log);
+            var rewards = client.GetLiquidityRewards();
+            Assert.IsNotNull(rewards);
+            Assert.IsNotNull(rewards.data);
+
+            var task = client.GetLiquidityRewardsAsync();
+            Task.WaitAll(task);
+            var taskRewards = task.Result.data;
+            Assert.IsNotNull(taskRewards);
+        }
     }
 }

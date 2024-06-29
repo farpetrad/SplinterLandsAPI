@@ -6,6 +6,7 @@ using SplinterLands.DTOs.Enums;
 using SplinterLands.DTOs.Extensions;
 using SplinterLands.DTOs.Models;
 using System.Net;
+using System.Numerics;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -211,6 +212,15 @@ namespace SplinterLandsAPI
             if (tier != null) urlBuilder.Append($"&tier={tier}");
             var url = urlBuilder.ToString();
             return await GetClientResponseAsync<VnexApiResponse<GroupedDeedStakeableCards>>(url, api1: false, vnext: true);
+        }
+
+        public VnexApiResponse<LiquidityReward[]> GetLiquidityRewards()
+        {
+            return GetClientResponse<VnexApiResponse<LiquidityReward[]>>($"land/liquidity/allrewards", api1: false, vnext: true);
+        }
+        public async Task<VnexApiResponse<LiquidityReward[]>> GetLiquidityRewardsAsync()
+        {
+            return await GetClientResponseAsync<VnexApiResponse<LiquidityReward[]>>($"land/liquidity/allrewards", api1: false, vnext: true);
         }
 
         public CardSet GetCards()

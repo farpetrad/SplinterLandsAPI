@@ -24,5 +24,7 @@ namespace SplinterLandsAPI
                                                                                 GroupedDeedStakeableCardsOrderByEnum orderBy, GroupedDeedStakeableCardsOrderByAscEnum orderbyAsc,
                                                                                 uint? card_detail_id = null, uint? bcx = null, bool? gold = null, uint? edition = null, double? land_pp_at_or_gt = null, double? land_pp_at_or_lt = null,
                                                                                 double? land_dec_stake_needed_at_or_gt = null, double? land_dec_stake_needed_at_or_lt = null, string? name = null, uint? tier = null);
+        VnexApiResponse<LiquidityReward[]> GetLiquidityRewards();
+        Task<VnexApiResponse<LiquidityReward[]>> GetLiquidityRewardsAsync();
     }
 }
